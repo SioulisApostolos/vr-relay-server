@@ -32,7 +32,6 @@
     overflow-x: hidden;
   }
 
-  /* ── HEADER ── */
   header {
     display: flex;
     align-items: center;
@@ -65,11 +64,7 @@
     50%       { opacity: 0.7; box-shadow: 0 0 0 6px rgba(0,212,255,0); }
   }
 
-  .header-status {
-    display: flex;
-    gap: 20px;
-    align-items: center;
-  }
+  .header-status { display: flex; gap: 20px; align-items: center; }
 
   .status-pill {
     display: flex;
@@ -87,10 +82,9 @@
     transition: background 0.3s;
   }
 
-  .status-pill.on .dot  { background: var(--green); box-shadow: 0 0 6px var(--green); }
-  .status-pill.on       { color: var(--text); }
+  .status-pill.on .dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .status-pill.on      { color: var(--text); }
 
-  /* ── RELAY CONNECT BAR ── */
   .relay-bar {
     display: flex;
     align-items: center;
@@ -121,16 +115,13 @@
     white-space: nowrap;
   }
 
-  /* ── LAYOUT ── */
   .layout {
     display: grid;
     grid-template-columns: 320px 1fr 280px;
-    grid-template-rows: auto 1fr;
     gap: 0;
-    height: calc(100vh - 97px);
+    height: calc(100vh - 130px);
   }
 
-  /* ── PANEL ── */
   .panel {
     border-right: 1px solid var(--border);
     padding: 20px;
@@ -152,7 +143,6 @@
     padding-bottom: 10px;
   }
 
-  /* ── SECTION ── */
   .section { display: flex; flex-direction: column; gap: 10px; }
 
   .section-label {
@@ -160,13 +150,6 @@
     color: var(--dim);
     letter-spacing: 0.12em;
     text-transform: uppercase;
-  }
-
-  /* ── INPUT ── */
-  .field {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
   }
 
   input[type="text"], select {
@@ -181,13 +164,10 @@
     transition: border 0.2s;
   }
 
-  input[type="text"]:focus,
-  select:focus { border-color: var(--accent); }
-
+  input[type="text"]:focus, select:focus { border-color: var(--accent); }
   select { cursor: pointer; }
   select option { background: var(--surface); }
 
-  /* ── BUTTONS ── */
   .btn {
     display: flex;
     align-items: center;
@@ -208,47 +188,12 @@
   }
 
   .btn:hover { border-color: var(--text); color: var(--text); }
-
-  .btn.primary {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #000;
-  }
-
-  .btn.primary:hover { background: #33ddff; }
-
-  .btn.danger {
-    border-color: var(--red);
-    color: var(--red);
-  }
-
-  .btn.danger:hover { background: rgba(255,82,82,0.1); }
-
-  .btn.success {
-    border-color: var(--green);
-    color: var(--green);
-  }
-
+  .btn.danger  { border-color: var(--red);   color: var(--red); }
+  .btn.danger:hover  { background: rgba(255,82,82,0.1); }
+  .btn.success { border-color: var(--green); color: var(--green); }
   .btn.success:hover { background: rgba(0,230,118,0.1); }
 
-  .btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-
-  .btn-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-
-  /* ── SLIDER ── */
-  .slider-row {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+  .slider-row { display: flex; flex-direction: column; gap: 6px; }
 
   .slider-header {
     display: flex;
@@ -260,7 +205,6 @@
     font-size: 18px;
     font-weight: 500;
     color: var(--accent);
-    letter-spacing: -0.02em;
   }
 
   input[type="range"] {
@@ -278,10 +222,7 @@
     border-radius: 50%;
     background: var(--accent);
     cursor: pointer;
-    transition: transform 0.1s;
   }
-
-  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.3); }
 
   .slider-labels {
     display: flex;
@@ -290,12 +231,7 @@
     color: var(--dim);
   }
 
-  /* ── TELEMETRY GRID ── */
-  .tele-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
+  .tele-grid { display: flex; flex-direction: column; gap: 0; }
 
   .tele-row {
     display: flex;
@@ -306,44 +242,26 @@
   }
 
   .tele-row:last-child { border-bottom: none; }
+  .tele-key { font-size: 11px; color: var(--dim); }
+  .tele-val { font-size: 13px; font-weight: 500; color: var(--text); text-align: right; }
 
-  .tele-key {
-    font-size: 11px;
-    color: var(--dim);
-    letter-spacing: 0.06em;
-  }
-
-  .tele-val {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
-    text-align: right;
-  }
-
-  /* Phase colors */
-  .phase-Idle         { color: var(--dim) !important; }
-  .phase-Baseline     { color: var(--cyan) !important; }
-  .phase-SpinningUp   { color: var(--cyan) !important; }
-  .phase-AtMaxRPM     { color: var(--green) !important; }
+  .phase-Idle         { color: var(--dim)    !important; }
+  .phase-Baseline     { color: var(--cyan)   !important; }
+  .phase-SpinningUp   { color: var(--cyan)   !important; }
+  .phase-AtMaxRPM     { color: var(--green)  !important; }
   .phase-SpinningDown { color: var(--yellow) !important; }
 
-  .emg-Idle                { color: var(--dim) !important; }
-  .emg-CollectingBaseline  { color: var(--cyan) !important; }
-  .emg-WaitingForMaxRpm    { color: var(--yellow) !important; }
-  .emg-BiofeedbackActive   { color: var(--green) !important; }
-  .emg-SpinningDown        { color: var(--orange) !important; }
+  .emg-Idle               { color: var(--dim)    !important; }
+  .emg-CollectingBaseline { color: var(--cyan)   !important; }
+  .emg-WaitingForMaxRpm   { color: var(--yellow) !important; }
+  .emg-BiofeedbackActive  { color: var(--green)  !important; }
+  .emg-SpinningDown       { color: var(--orange) !important; }
 
-  /* ── SPEED BAR ── */
-  .speed-bar-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+  .speed-bar-wrap { display: flex; flex-direction: column; gap: 6px; }
 
   .speed-bar-track {
     height: 6px;
     background: var(--border2);
-    position: relative;
     overflow: hidden;
   }
 
@@ -354,27 +272,34 @@
     width: 0%;
   }
 
-  .speed-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--dim);
-  }
-
   .speed-number {
     font-size: 22px;
     font-weight: 500;
     color: var(--accent);
-    letter-spacing: -0.03em;
   }
 
-  /* ── LOG ── */
-  .log-panel {
-    grid-column: 1 / -1;
-    border-top: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
+  .cal-dots { display: flex; gap: 4px; }
+
+  .cal-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--border2);
+    transition: background 0.3s;
   }
+
+  .cal-dot.active { background: var(--green); box-shadow: 0 0 4px var(--green); }
+
+  #unityBanner {
+    display: none;
+    padding: 8px 24px;
+    background: rgba(255,82,82,0.08);
+    border-bottom: 1px solid rgba(255,82,82,0.2);
+    font-size: 11px;
+    color: var(--red);
+    text-align: center;
+  }
+
+  #unityBanner.show { display: block; }
 
   .log-header {
     display: flex;
@@ -382,6 +307,7 @@
     justify-content: space-between;
     padding: 8px 20px;
     background: var(--surface);
+    border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     font-size: 10px;
     color: var(--dim);
@@ -396,18 +322,16 @@
     font-family: 'IBM Plex Mono', monospace;
     font-size: 10px;
     cursor: pointer;
-    letter-spacing: 0.1em;
   }
 
   .log-clear:hover { color: var(--text); }
 
   #logFeed {
-    flex: 1;
     overflow-y: auto;
-    padding: 10px 20px;
+    padding: 8px 20px;
     font-size: 12px;
     line-height: 1.7;
-    max-height: 140px;
+    max-height: 120px;
   }
 
   .log-line { display: block; }
@@ -417,89 +341,43 @@
   .log-info { color: var(--cyan); }
   .log-ok   { color: var(--green); }
 
-  /* ── CALIBRATION DOTS ── */
-  .cal-dots {
-    display: flex;
-    gap: 4px;
-  }
-
-  .cal-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--border2);
-    transition: background 0.3s;
-  }
-
-  .cal-dot.active { background: var(--green); box-shadow: 0 0 4px var(--green); }
-
-  /* ── UNITY STATUS ── */
-  #unityBanner {
-    display: none;
-    padding: 8px 24px;
-    background: rgba(255,82,82,0.08);
-    border-bottom: 1px solid rgba(255,82,82,0.2);
-    font-size: 11px;
-    color: var(--red);
-    letter-spacing: 0.08em;
-    text-align: center;
-  }
-
-  #unityBanner.show { display: block; }
-
-  /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border2); }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 900px) {
-    .layout {
-      grid-template-columns: 1fr;
-      grid-template-rows: auto;
-      height: auto;
-    }
-    .panel { border-right: none; border-bottom: 1px solid var(--border); }
+    .layout { grid-template-columns: 1fr; height: auto; }
+    .panel  { border-right: none; border-bottom: 1px solid var(--border); }
   }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
   <div class="logo">
     <div class="logo-dot"></div>
     VR Experiment Control
   </div>
   <div class="header-status">
-    <div class="status-pill" id="relayPill">
-      <div class="dot"></div>
-      <span>RELAY</span>
-    </div>
-    <div class="status-pill" id="unityPill">
-      <div class="dot"></div>
-      <span>UNITY</span>
-    </div>
+    <div class="status-pill" id="relayPill"><div class="dot"></div><span>RELAY</span></div>
+    <div class="status-pill" id="unityPill"><div class="dot"></div><span>UNITY</span></div>
   </div>
 </header>
 
-<!-- RELAY CONNECT BAR -->
 <div class="relay-bar">
   <label>RELAY</label>
   <input type="text" id="relayUrlInput" value="wss://vr-relay-server-production.up.railway.app?role=dashboard" />
   <button id="connectBtn" onclick="toggleRelay()" style="background:#00d4ff;color:#000;border:none;padding:8px 18px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:0.1em;cursor:pointer;white-space:nowrap;">CONNECT</button>
 </div>
 
-<!-- UNITY NOT CONNECTED BANNER -->
 <div id="unityBanner">⚠ Unity VR app is not connected to relay</div>
 
-<!-- MAIN LAYOUT -->
 <div class="layout">
 
-  <!-- LEFT PANEL — CONTROLS -->
+  <!-- LEFT PANEL -->
   <div class="panel">
     <div class="panel-title">Session Setup</div>
 
-    <!-- Participant ID -->
     <div class="section">
       <div class="section-label">Participant ID</div>
       <div style="display:flex;gap:8px;">
@@ -508,7 +386,6 @@
       </div>
     </div>
 
-    <!-- Video Selection -->
     <div class="section">
       <div class="section-label">Video</div>
       <select id="videoSelect" onchange="sendVideoSelect()">
@@ -521,40 +398,36 @@
       <div style="font-size:10px;color:var(--dim);">Index must match Resources/Videos order in Unity.</div>
     </div>
 
-    <!-- Start / Quit -->
     <div class="section">
       <div class="section-label">Experiment</div>
       <button class="btn success" onclick="sendCommand('startExperiment')" style="margin-bottom:8px;">▶ START SESSION</button>
-      <button class="btn danger"  onclick="confirmQuit()">⏹ QUIT SESSION</button>
+      <button class="btn danger" onclick="confirmQuit()">⏹ QUIT SESSION</button>
       <div id="quitConfirm" style="display:none;margin-top:8px;padding:10px;border:1px solid var(--red);background:rgba(255,82,82,0.06);">
-        <div style="font-size:11px;color:var(--red);margin-bottom:8px;letter-spacing:0.05em;">Quit current session?</div>
+        <div style="font-size:11px;color:var(--red);margin-bottom:8px;">Quit current session?</div>
         <div style="display:flex;gap:8px;">
           <button class="btn danger" style="flex:1;" onclick="sendCommand('quitSession');hideQuitConfirm()">CONFIRM</button>
-          <button class="btn"        style="flex:1;" onclick="hideQuitConfirm()">CANCEL</button>
+          <button class="btn" style="flex:1;" onclick="hideQuitConfirm()">CANCEL</button>
         </div>
       </div>
     </div>
 
-    <!-- Quit App -->
     <div class="section">
       <div class="section-label">Application</div>
       <button class="btn danger" onclick="confirmQuitApp()" style="border-color:#ff1744;color:#ff1744;">⏻ QUIT APPLICATION</button>
       <div id="quitAppConfirm" style="display:none;margin-top:8px;padding:10px;border:1px solid #ff1744;background:rgba(255,23,68,0.08);">
-        <div style="font-size:11px;color:#ff1744;margin-bottom:8px;letter-spacing:0.05em;">This will close the VR app entirely.</div>
+        <div style="font-size:11px;color:#ff1744;margin-bottom:8px;">This will close the VR app entirely.</div>
         <div style="display:flex;gap:8px;">
           <button class="btn danger" style="flex:1;border-color:#ff1744;color:#ff1744;" onclick="sendCommand('quitApp');hideQuitAppConfirm()">CONFIRM</button>
-          <button class="btn"        style="flex:1;" onclick="hideQuitAppConfirm()">CANCEL</button>
+          <button class="btn" style="flex:1;" onclick="hideQuitAppConfirm()">CANCEL</button>
         </div>
       </div>
     </div>
 
-    <!-- Recenter -->
     <div class="section">
       <div class="section-label">View</div>
       <button class="btn" onclick="sendCommand('recenterView')">⊕ RECENTER VIEW</button>
     </div>
 
-    <!-- EMG Factor -->
     <div class="section">
       <div class="section-label">EMG Sensitivity</div>
       <div class="slider-row">
@@ -562,23 +435,17 @@
           <span style="font-size:11px;color:var(--dim);">emgToSpeedFactor</span>
           <span class="slider-value" id="emgFactorDisplay">0.50</span>
         </div>
-        <input type="range" id="emgFactorSlider"
-               min="0.1" max="2.0" step="0.05" value="0.5"
-               oninput="onEmgSlider(this.value)"
-               onchange="sendEmgFactor(this.value)" />
-        <div class="slider-labels">
-          <span>0.1 weak signal</span>
-          <span>2.0 strong</span>
-        </div>
+        <input type="range" id="emgFactorSlider" min="0.1" max="2.0" step="0.05" value="0.5"
+               oninput="onEmgSlider(this.value)" onchange="sendEmgFactor(this.value)" />
+        <div class="slider-labels"><span>0.1 weak</span><span>2.0 strong</span></div>
       </div>
     </div>
   </div>
 
-  <!-- CENTRE PANEL — TELEMETRY -->
+  <!-- CENTRE PANEL -->
   <div class="panel">
     <div class="panel-title">Live Telemetry</div>
 
-    <!-- Speed readout -->
     <div class="section">
       <div class="section-label">Playback Speed</div>
       <div class="speed-bar-wrap">
@@ -586,53 +453,24 @@
           <span class="speed-number" id="speedNum">1.00</span>
           <span style="color:var(--dim);font-size:12px;">×</span>
         </div>
-        <div class="speed-bar-track">
-          <div class="speed-bar-fill" id="speedBar"></div>
-        </div>
-        <div class="speed-labels">
-          <span>1×</span><span>4×</span>
-        </div>
+        <div class="speed-bar-track"><div class="speed-bar-fill" id="speedBar"></div></div>
+        <div class="slider-labels"><span>1×</span><span>4×</span></div>
       </div>
     </div>
 
-    <!-- Phase + EMG state -->
     <div class="tele-grid">
-      <div class="tele-row">
-        <span class="tele-key">Phase</span>
-        <span class="tele-val" id="t-phase">—</span>
-      </div>
-      <div class="tele-row">
-        <span class="tele-key">EMG State</span>
-        <span class="tele-val" id="t-emgState">—</span>
-      </div>
-      <div class="tele-row">
-        <span class="tele-key">Heading</span>
-        <span class="tele-val" id="t-heading">—</span>
-      </div>
-      <div class="tele-row">
-        <span class="tele-key">Heading Rate</span>
-        <span class="tele-val" id="t-hdgRate">—</span>
-      </div>
-      <div class="tele-row">
-        <span class="tele-key">GyroZ</span>
-        <span class="tele-val" id="t-gyroZ">—</span>
-      </div>
-      <div class="tele-row">
-        <span class="tele-key">Baseline EMG</span>
-        <span class="tele-val" id="t-baseline">—</span>
-      </div>
-      <div class="tele-row">
-        <span class="tele-key">Smoothed EMG</span>
-        <span class="tele-val" id="t-smoothed">—</span>
-      </div>
-      <div class="tele-row">
-        <span class="tele-key">EMG Delta</span>
-        <span class="tele-val" id="t-delta">—</span>
-      </div>
+      <div class="tele-row"><span class="tele-key">Phase</span><span class="tele-val" id="t-phase">—</span></div>
+      <div class="tele-row"><span class="tele-key">EMG State</span><span class="tele-val" id="t-emgState">—</span></div>
+      <div class="tele-row"><span class="tele-key">Heading</span><span class="tele-val" id="t-heading">—</span></div>
+      <div class="tele-row"><span class="tele-key">Heading Rate</span><span class="tele-val" id="t-hdgRate">—</span></div>
+      <div class="tele-row"><span class="tele-key">GyroZ</span><span class="tele-val" id="t-gyroZ">—</span></div>
+      <div class="tele-row"><span class="tele-key">Baseline EMG</span><span class="tele-val" id="t-baseline">—</span></div>
+      <div class="tele-row"><span class="tele-key">Smoothed EMG</span><span class="tele-val" id="t-smoothed">—</span></div>
+      <div class="tele-row"><span class="tele-key">EMG Delta</span><span class="tele-val" id="t-delta">—</span></div>
     </div>
   </div>
 
-  <!-- RIGHT PANEL — SENSOR STATUS -->
+  <!-- RIGHT PANEL -->
   <div class="panel">
     <div class="panel-title">Sensor Status</div>
 
@@ -646,7 +484,7 @@
 
     <div class="section">
       <div class="section-label">IMU Calibration</div>
-      <div class="cal-dots" id="calDots">
+      <div class="cal-dots">
         <div class="cal-dot" id="cal0"></div>
         <div class="cal-dot" id="cal1"></div>
         <div class="cal-dot" id="cal2"></div>
@@ -670,6 +508,13 @@
 
 </div><!-- end layout -->
 
+<!-- LOG FOOTER -->
+<div class="log-header">
+  <span>Event Log</span>
+  <button class="log-clear" id="logClearBtn">CLEAR</button>
+</div>
+<div id="logFeed"></div>
+
 <script>
 // ==============================
 // STATE
@@ -677,15 +522,19 @@
 let ws = null;
 let unityConnected = false;
 
-const relayUrlInput  = document.getElementById('relayUrlInput');
-const connectBtn     = document.getElementById('connectBtn');
-const relayPill      = document.getElementById('relayPill');
-const unityPill      = document.getElementById('unityPill');
-const unityBanner    = document.getElementById('unityBanner');
+const relayUrlInput = document.getElementById('relayUrlInput');
+const connectBtn    = document.getElementById('connectBtn');
+const relayPill     = document.getElementById('relayPill');
+const unityPill     = document.getElementById('unityPill');
+const unityBanner   = document.getElementById('unityBanner');
+const logFeed       = document.getElementById('logFeed');
+const logLines      = [];
+const MAX_LOG       = 120;
 
-// Load saved relay URL
-const savedUrl = localStorage.getItem('relayUrl');
-if (savedUrl) relayUrlInput.value = savedUrl;
+document.getElementById('logClearBtn').onclick = () => {
+  logFeed.innerHTML = '';
+  logLines.length = 0;
+};
 
 // ==============================
 // RELAY CONNECTION
@@ -699,9 +548,7 @@ function toggleRelay() {
   const url = relayUrlInput.value.trim();
   if (!url) { addLog('error', 'Enter a relay URL first'); return; }
 
-  localStorage.setItem('relayUrl', url);
   addLog('info', 'Connecting to relay...');
-
   ws = new WebSocket(url);
 
   ws.onopen = () => {
@@ -735,66 +582,49 @@ function toggleRelay() {
 // INCOMING MESSAGES
 // ==============================
 function handleMessage(msg) {
-  if (msg.type === 'status') {
-    setUnityStatus(msg.payload.unity);
-    return;
-  }
-
-  if (msg.type === 'error') {
-    addLog('error', msg.payload.message);
-    return;
-  }
-
-  if (msg.type === 'telemetry') {
-    updateTelemetry(msg.payload);
-  }
+  if (msg.type === 'status') { setUnityStatus(msg.payload.unity); return; }
+  if (msg.type === 'error')  { addLog('error', msg.payload.message); return; }
+  if (msg.type === 'telemetry') { updateTelemetry(msg.payload); }
 }
 
 // ==============================
-// TELEMETRY UPDATE
+// TELEMETRY
 // ==============================
 function updateTelemetry(d) {
-  // Phase
   const phaseEl = document.getElementById('t-phase');
   phaseEl.textContent = d.phase || '—';
   phaseEl.className = 'tele-val phase-' + d.phase;
 
-  // EMG State
   const emgEl = document.getElementById('t-emgState');
   emgEl.textContent = d.emgState || '—';
   emgEl.className = 'tele-val emg-' + d.emgState;
 
-  setText('t-heading',  d.heading?.toFixed(1) + ' °');
-  setText('t-hdgRate',  d.headingRate?.toFixed(1) + ' °/s');
-  setText('t-gyroZ',    d.gyroZ?.toFixed(3));
-  setText('t-baseline', d.baseline?.toFixed(4));
-  setText('t-smoothed', d.smoothedEmg?.toFixed(4));
-  setText('t-delta',    d.emgDelta?.toFixed(4));
+  setText('t-heading',  (d.heading?.toFixed(1) ?? '—') + ' °');
+  setText('t-hdgRate',  (d.headingRate?.toFixed(1) ?? '—') + ' °/s');
+  setText('t-gyroZ',    d.gyroZ?.toFixed(3) ?? '—');
+  setText('t-baseline', d.baseline?.toFixed(4) ?? '—');
+  setText('t-smoothed', d.smoothedEmg?.toFixed(4) ?? '—');
+  setText('t-delta',    d.emgDelta?.toFixed(4) ?? '—');
 
-  // Speed bar (1–4 mapped to 0–100%)
   const speed = d.speed ?? 1;
   document.getElementById('speedNum').textContent = speed.toFixed(2);
   document.getElementById('speedBar').style.width = ((speed - 1) / 3 * 100) + '%';
 
-  // Streaming
   const streamEl = document.getElementById('t-streaming');
-  streamEl.textContent  = d.streaming ? 'ACTIVE' : 'OFFLINE';
-  streamEl.style.color  = d.streaming ? 'var(--green)' : 'var(--red)';
+  streamEl.textContent = d.streaming ? 'ACTIVE' : 'OFFLINE';
+  streamEl.style.color = d.streaming ? 'var(--green)' : 'var(--red)';
 
-  // Calibration dots
   const cal = d.calibration ?? 0;
   for (let i = 0; i < 3; i++) {
     document.getElementById('cal' + i).classList.toggle('active', i < cal);
   }
   document.getElementById('calLabel').textContent = cal + ' / 3';
 
-  // RSSI with color
   const rssi = d.rssi ?? 0;
   const rssiEl = document.getElementById('t-rssi');
   rssiEl.textContent = rssi + ' dBm';
   rssiEl.style.color = rssi > -60 ? 'var(--green)' : rssi > -75 ? 'var(--yellow)' : 'var(--red)';
 
-  // Log line
   if (d.log) {
     document.getElementById('lastLog').textContent = d.log;
     addLog('info', d.log);
@@ -802,27 +632,12 @@ function updateTelemetry(d) {
 }
 
 // ==============================
-// SEND COMMANDS
+// COMMANDS
 // ==============================
-function confirmQuit() {
-  document.getElementById('quitConfirm').style.display = 'block';
-}
-
-function hideQuitConfirm() {
-  document.getElementById('quitConfirm').style.display = 'none';
-}
-
-function confirmQuitApp() {
-  document.getElementById('quitAppConfirm').style.display = 'block';
-}
-
-function hideQuitAppConfirm() {
-  document.getElementById('quitAppConfirm').style.display = 'none';
-}
-
-
+function sendCommand(type, payload = {}) {
   if (!ws || ws.readyState !== WebSocket.OPEN) {
-    addLog('error', 'Not connected to relay'); return;
+    addLog('error', 'Not connected to relay');
+    return;
   }
   ws.send(JSON.stringify({ type, payload }));
   addLog('ok', '→ ' + type);
@@ -847,8 +662,24 @@ function sendEmgFactor(val) {
   sendCommand('setEmgFactor', { value: parseFloat(val) });
 }
 
+function confirmQuit() {
+  document.getElementById('quitConfirm').style.display = 'block';
+}
+
+function hideQuitConfirm() {
+  document.getElementById('quitConfirm').style.display = 'none';
+}
+
+function confirmQuitApp() {
+  document.getElementById('quitAppConfirm').style.display = 'block';
+}
+
+function hideQuitAppConfirm() {
+  document.getElementById('quitAppConfirm').style.display = 'none';
+}
+
 // ==============================
-// STATUS INDICATORS
+// STATUS
 // ==============================
 function setRelayStatus(on) {
   relayPill.classList.toggle('on', on);
@@ -863,34 +694,19 @@ function setUnityStatus(on) {
 // ==============================
 // LOG
 // ==============================
-const logFeed = document.getElementById('logFeed');
-const logLines = [];
-const MAX_LOG = 120;
-
 function addLog(type, msg) {
-  // Deduplicate telemetry log spam
   if (type === 'info' && logLines.length > 0 && logLines[logLines.length-1].msg === msg) return;
-
-  const time = new Date().toLocaleTimeString('en-GB', {hour12:false});
+  const time = new Date().toLocaleTimeString('en-GB', {hour12: false});
   logLines.push({ type, msg });
   if (logLines.length > MAX_LOG) logLines.shift();
-
   const cls = { ok:'log-ok', error:'log-err', warn:'log-warn', info:'log-info' }[type] || '';
   const line = document.createElement('span');
   line.className = 'log-line';
   line.innerHTML = `<span class="log-time">${time}</span><span class="${cls}">${escapeHtml(msg)}</span>`;
   logFeed.appendChild(line);
   logFeed.scrollTop = logFeed.scrollHeight;
-
-  // Trim DOM
   while (logFeed.children.length > MAX_LOG) logFeed.removeChild(logFeed.firstChild);
 }
-
-document.getElementById('logFeed'); // just ref
-document.querySelector('.log-clear').onclick = () => {
-  logFeed.innerHTML = '';
-  logLines.length = 0;
-};
 
 // ==============================
 // HELPERS
@@ -904,16 +720,7 @@ function escapeHtml(s) {
   return String(s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  
 }
-<!-- Log feed footer -->
-<div style="border-top:1px solid var(--border);background:var(--surface);">
-  <div class="log-header">
-    <span>Event Log</span>
-    <button class="log-clear">CLEAR</button>
-  </div>
-  <div id="logFeed" style="max-height:120px;overflow-y:auto;padding:8px 20px;font-size:12px;line-height:1.7;"></div>
-</div>
 </script>
 </body>
 </html>
