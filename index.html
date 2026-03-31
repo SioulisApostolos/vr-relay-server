@@ -7,357 +7,84 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg:        #0a0c0f;
-    --surface:   #111318;
-    --border:    #1e2229;
-    --border2:   #2a3040;
-    --text:      #c8d0dc;
-    --dim:       #5a6275;
-    --accent:    #00d4ff;
-    --green:     #00e676;
-    --yellow:    #ffd740;
-    --red:       #ff5252;
-    --orange:    #ff9100;
-    --cyan:      #40c4ff;
+    --bg:#0a0c0f;--surface:#111318;--border:#1e2229;--border2:#2a3040;
+    --text:#c8d0dc;--dim:#5a6275;--accent:#00d4ff;--green:#00e676;
+    --yellow:#ffd740;--red:#ff5252;--orange:#ff9100;--cyan:#40c4ff;
   }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
-
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--border);
-    background: var(--surface);
-  }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--accent);
-  }
-
-  .logo-dot {
-    width: 8px; height: 8px;
-    background: var(--accent);
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0,212,255,0.4); }
-    50%       { opacity: 0.7; box-shadow: 0 0 0 6px rgba(0,212,255,0); }
-  }
-
-  .header-status { display: flex; gap: 20px; align-items: center; }
-
-  .status-pill {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    color: var(--dim);
-  }
-
-  .status-pill .dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--dim);
-    transition: background 0.3s;
-  }
-
-  .status-pill.on .dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
-  .status-pill.on      { color: var(--text); }
-
-  .relay-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 24px;
-    background: #0d0f13;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .relay-bar input {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 12px;
-    padding: 7px 12px;
-    outline: none;
-    transition: border 0.2s;
-  }
-
-  .relay-bar input:focus { border-color: var(--accent); }
-
-  .relay-bar label {
-    font-size: 11px;
-    color: var(--dim);
-    letter-spacing: 0.1em;
-    white-space: nowrap;
-  }
-
-  .layout {
-    display: grid;
-    grid-template-columns: 320px 1fr 280px;
-    gap: 0;
-    height: calc(100vh - 130px);
-  }
-
-  .panel {
-    border-right: 1px solid var(--border);
-    padding: 20px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  .panel:last-child { border-right: none; }
-
-  .panel-title {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--dim);
-    border-bottom: 1px solid var(--border);
-    padding-bottom: 10px;
-  }
-
-  .section { display: flex; flex-direction: column; gap: 10px; }
-
-  .section-label {
-    font-size: 10px;
-    color: var(--dim);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-  }
-
-  input[type="text"], select {
-    background: var(--surface);
-    border: 1px solid var(--border2);
-    color: var(--text);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 13px;
-    padding: 9px 12px;
-    outline: none;
-    width: 100%;
-    transition: border 0.2s;
-  }
-
-  input[type="text"]:focus, select:focus { border-color: var(--accent); }
-  select { cursor: pointer; }
-  select option { background: var(--surface); }
-
-  .btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px 16px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    border: 1px solid var(--border2);
-    background: var(--surface);
-    color: var(--dim);
-    cursor: pointer;
-    transition: all 0.15s;
-    width: 100%;
-  }
-
-  .btn:hover { border-color: var(--text); color: var(--text); }
-  .btn.danger  { border-color: var(--red);   color: var(--red); }
-  .btn.danger:hover  { background: rgba(255,82,82,0.1); }
-  .btn.success { border-color: var(--green); color: var(--green); }
-  .btn.success:hover { background: rgba(0,230,118,0.1); }
-
-  .slider-row { display: flex; flex-direction: column; gap: 6px; }
-
-  .slider-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-  }
-
-  .slider-value {
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--accent);
-  }
-
-  input[type="range"] {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 3px;
-    background: var(--border2);
-    outline: none;
-    cursor: pointer;
-  }
-
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 14px; height: 14px;
-    border-radius: 50%;
-    background: var(--accent);
-    cursor: pointer;
-  }
-
-  .slider-labels {
-    display: flex;
-    justify-content: space-between;
-    font-size: 10px;
-    color: var(--dim);
-  }
-
-  .tele-grid { display: flex; flex-direction: column; gap: 0; }
-
-  .tele-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 7px 0;
-    border-bottom: 1px solid var(--border);
-  }
-
-  .tele-row:last-child { border-bottom: none; }
-  .tele-key { font-size: 11px; color: var(--dim); }
-  .tele-val { font-size: 13px; font-weight: 500; color: var(--text); text-align: right; }
-
-  .phase-Idle         { color: var(--dim)    !important; }
-  .phase-Baseline     { color: var(--cyan)   !important; }
-  .phase-SpinningUp   { color: var(--cyan)   !important; }
-  .phase-AtMaxRPM     { color: var(--green)  !important; }
-  .phase-SpinningDown { color: var(--yellow) !important; }
-
-  .emg-Idle               { color: var(--dim)    !important; }
-  .emg-CollectingBaseline { color: var(--cyan)   !important; }
-  .emg-WaitingForMaxRpm   { color: var(--yellow) !important; }
-  .emg-BiofeedbackActive  { color: var(--green)  !important; }
-  .emg-SpinningDown       { color: var(--orange) !important; }
-
-  .speed-bar-wrap { display: flex; flex-direction: column; gap: 6px; }
-
-  .speed-bar-track {
-    height: 6px;
-    background: var(--border2);
-    overflow: hidden;
-  }
-
-  .speed-bar-fill {
-    height: 100%;
-    background: var(--accent);
-    transition: width 0.1s linear;
-    width: 0%;
-  }
-
-  .speed-number {
-    font-size: 22px;
-    font-weight: 500;
-    color: var(--accent);
-  }
-
-  .cal-dots { display: flex; gap: 4px; }
-
-  .cal-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--border2);
-    transition: background 0.3s;
-  }
-
-  .cal-dot.active { background: var(--green); box-shadow: 0 0 4px var(--green); }
-
-  #unityBanner {
-    display: none;
-    padding: 8px 24px;
-    background: rgba(255,82,82,0.08);
-    border-bottom: 1px solid rgba(255,82,82,0.2);
-    font-size: 11px;
-    color: var(--red);
-    text-align: center;
-  }
-
-  #unityBanner.show { display: block; }
-
-  .log-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 20px;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    font-size: 10px;
-    color: var(--dim);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-  }
-
-  .log-clear {
-    background: none;
-    border: none;
-    color: var(--dim);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 10px;
-    cursor: pointer;
-  }
-
-  .log-clear:hover { color: var(--text); }
-
-  #logFeed {
-    overflow-y: auto;
-    padding: 8px 20px;
-    font-size: 12px;
-    line-height: 1.7;
-    max-height: 120px;
-  }
-
-  .log-line { display: block; }
-  .log-time { color: var(--dim); margin-right: 8px; }
-  .log-warn { color: var(--yellow); }
-  .log-err  { color: var(--red); }
-  .log-info { color: var(--cyan); }
-  .log-ok   { color: var(--green); }
-
-  ::-webkit-scrollbar { width: 4px; height: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border2); }
-
-  @media (max-width: 900px) {
-    .layout { grid-template-columns: 1fr; height: auto; }
-    .panel  { border-right: none; border-bottom: 1px solid var(--border); }
-  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;min-height:100vh;overflow-x:hidden;}
+  header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;border-bottom:1px solid var(--border);background:var(--surface);}
+  .logo{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);}
+  .logo-dot{width:8px;height:8px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,212,255,.4)}50%{opacity:.7;box-shadow:0 0 0 6px rgba(0,212,255,0)}}
+  .header-status{display:flex;gap:20px;align-items:center;}
+  .status-pill{display:flex;align-items:center;gap:6px;font-size:11px;letter-spacing:.08em;color:var(--dim);}
+  .status-pill .dot{width:6px;height:6px;border-radius:50%;background:var(--dim);transition:background .3s;}
+  .status-pill.on .dot{background:var(--green);box-shadow:0 0 6px var(--green);}
+  .status-pill.on{color:var(--text);}
+  .relay-bar{display:flex;align-items:center;gap:10px;padding:12px 24px;background:#0d0f13;border-bottom:1px solid var(--border);}
+  .relay-bar input{flex:1;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:12px;padding:7px 12px;outline:none;transition:border .2s;}
+  .relay-bar input:focus{border-color:var(--accent);}
+  .relay-bar label{font-size:11px;color:var(--dim);letter-spacing:.1em;white-space:nowrap;}
+  .layout{display:grid;grid-template-columns:300px 1fr 240px 240px;gap:0;height:calc(100vh - 170px);}
+  .panel{border-right:1px solid var(--border);padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:18px;}
+  .panel:last-child{border-right:none;}
+  .panel-title{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--border);padding-bottom:10px;}
+  .section{display:flex;flex-direction:column;gap:10px;}
+  .section-label{font-size:10px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;}
+  input[type="text"],select{background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:13px;padding:9px 12px;outline:none;width:100%;transition:border .2s;}
+  input[type="text"]:focus,select:focus{border-color:var(--accent);}
+  select{cursor:pointer;}select option{background:var(--surface);}
+  .btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--border2);background:var(--surface);color:var(--dim);cursor:pointer;transition:all .15s;width:100%;}
+  .btn:hover{border-color:var(--text);color:var(--text);}
+  .btn.danger{border-color:var(--red);color:var(--red);}
+  .btn.danger:hover{background:rgba(255,82,82,.1);}
+  .btn.success{border-color:var(--green);color:var(--green);}
+  .btn.success:hover{background:rgba(0,230,118,.1);}
+  .slider-row{display:flex;flex-direction:column;gap:6px;}
+  .slider-header{display:flex;justify-content:space-between;align-items:baseline;}
+  .slider-value{font-size:18px;font-weight:500;color:var(--accent);}
+  input[type="range"]{-webkit-appearance:none;width:100%;height:3px;background:var(--border2);outline:none;cursor:pointer;}
+  input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--accent);cursor:pointer;}
+  .slider-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);}
+  .tele-grid{display:flex;flex-direction:column;}
+  .tele-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);}
+  .tele-row:last-child{border-bottom:none;}
+  .tele-key{font-size:11px;color:var(--dim);}
+  .tele-val{font-size:13px;font-weight:500;color:var(--text);text-align:right;}
+  .phase-Idle{color:var(--dim)!important;}.phase-Baseline{color:var(--cyan)!important;}.phase-SpinningUp{color:var(--cyan)!important;}.phase-AtMaxRPM{color:var(--green)!important;}.phase-SpinningDown{color:var(--yellow)!important;}
+  .emg-Idle{color:var(--dim)!important;}.emg-CollectingBaseline{color:var(--cyan)!important;}.emg-WaitingForMaxRpm{color:var(--yellow)!important;}.emg-BiofeedbackActive{color:var(--green)!important;}.emg-SpinningDown{color:var(--orange)!important;}
+  .speed-bar-wrap{display:flex;flex-direction:column;gap:6px;}
+  .speed-bar-track{height:6px;background:var(--border2);overflow:hidden;}
+  .speed-bar-fill{height:100%;background:var(--accent);transition:width .1s linear;width:0%;}
+  .speed-number{font-size:22px;font-weight:500;color:var(--accent);}
+  .cal-dots{display:inline-flex;gap:4px;}
+  .cal-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);transition:background .3s;}
+  .cal-dot.active{background:var(--green);box-shadow:0 0 4px var(--green);}
+  #unityBanner{display:none;padding:8px 24px;background:rgba(255,82,82,.08);border-bottom:1px solid rgba(255,82,82,.2);font-size:11px;color:var(--red);text-align:center;}
+  #unityBanner.show{display:block;}
+  .session-entry{border:1px solid var(--border2);padding:10px 12px;display:flex;flex-direction:column;gap:5px;font-size:11px;margin-bottom:8px;}
+  .session-row{display:flex;justify-content:space-between;}
+  .session-key{color:var(--dim);}.session-val{color:var(--text);text-align:right;}
+  .reason-completed{color:var(--green)!important;}
+  .reason-quit_dashboard{color:var(--yellow)!important;}
+  .reason-quit_controller{color:var(--yellow)!important;}
+  .reason-quit_app{color:var(--red)!important;}
+  .no-sessions{color:var(--dim);font-size:11px;text-align:center;padding:20px 0;}
+  .log-header{display:flex;align-items:center;justify-content:space-between;padding:8px 20px;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-size:10px;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
+  .log-clear{background:none;border:none;color:var(--dim);font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;}
+  .log-clear:hover{color:var(--text);}
+  #logFeed{overflow-y:auto;padding:8px 20px;font-size:12px;line-height:1.7;max-height:100px;}
+  .log-line{display:block;}.log-time{color:var(--dim);margin-right:8px;}.log-warn{color:var(--yellow);}.log-err{color:var(--red);}.log-info{color:var(--cyan);}.log-ok{color:var(--green);}
+  ::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);}
+  @media(max-width:1100px){.layout{grid-template-columns:1fr 1fr;height:auto;}.panel{border-right:none;border-bottom:1px solid var(--border);}}
+  @media(max-width:600px){.layout{grid-template-columns:1fr;height:auto;}}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <div class="logo-dot"></div>
-    VR Experiment Control
-  </div>
+  <div class="logo"><div class="logo-dot"></div>VR Experiment Control</div>
   <div class="header-status">
     <div class="status-pill" id="relayPill"><div class="dot"></div><span>RELAY</span></div>
     <div class="status-pill" id="unityPill"><div class="dot"></div><span>UNITY</span></div>
@@ -367,17 +94,15 @@
 <div class="relay-bar">
   <label>RELAY</label>
   <input type="text" id="relayUrlInput" value="wss://vr-relay-server-production.up.railway.app?role=dashboard" />
-  <button id="connectBtn" onclick="toggleRelay()" style="background:#00d4ff;color:#000;border:none;padding:8px 18px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:0.1em;cursor:pointer;white-space:nowrap;">CONNECT</button>
+  <button id="connectBtn" onclick="toggleRelay()" style="background:#00d4ff;color:#000;border:none;padding:8px 18px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.1em;cursor:pointer;white-space:nowrap;">CONNECT</button>
 </div>
 
 <div id="unityBanner">⚠ Unity VR app is not connected to relay</div>
 
 <div class="layout">
 
-  <!-- LEFT PANEL -->
   <div class="panel">
     <div class="panel-title">Session Setup</div>
-
     <div class="section">
       <div class="section-label">Participant ID</div>
       <div style="display:flex;gap:8px;">
@@ -385,24 +110,18 @@
         <button class="btn" style="width:auto;padding:9px 14px;white-space:nowrap;" onclick="sendParticipantId()">SET</button>
       </div>
     </div>
-
     <div class="section">
       <div class="section-label">Video</div>
       <select id="videoSelect" onchange="sendVideoSelect()">
-        <option value="0">— Select Video —</option>
-        <option value="1">Video 1</option>
-        <option value="2">Video 2</option>
-        <option value="3">Video 3</option>
-        <option value="4">Video 4</option>
+        <option value="0">— Waiting for Unity —</option>
       </select>
-      <div style="font-size:10px;color:var(--dim);">Index must match Resources/Videos order in Unity.</div>
+      <div style="font-size:10px;color:var(--dim);">Populated automatically when Unity connects.</div>
     </div>
-
     <div class="section">
       <div class="section-label">Experiment</div>
       <button class="btn success" onclick="sendCommand('startExperiment')" style="margin-bottom:8px;">▶ START SESSION</button>
       <button class="btn danger" onclick="confirmQuit()">⏹ QUIT SESSION</button>
-      <div id="quitConfirm" style="display:none;margin-top:8px;padding:10px;border:1px solid var(--red);background:rgba(255,82,82,0.06);">
+      <div id="quitConfirm" style="display:none;margin-top:8px;padding:10px;border:1px solid var(--red);background:rgba(255,82,82,.06);">
         <div style="font-size:11px;color:var(--red);margin-bottom:8px;">Quit current session?</div>
         <div style="display:flex;gap:8px;">
           <button class="btn danger" style="flex:1;" onclick="sendCommand('quitSession');hideQuitConfirm()">CONFIRM</button>
@@ -410,11 +129,10 @@
         </div>
       </div>
     </div>
-
     <div class="section">
       <div class="section-label">Application</div>
       <button class="btn danger" onclick="confirmQuitApp()" style="border-color:#ff1744;color:#ff1744;">⏻ QUIT APPLICATION</button>
-      <div id="quitAppConfirm" style="display:none;margin-top:8px;padding:10px;border:1px solid #ff1744;background:rgba(255,23,68,0.08);">
+      <div id="quitAppConfirm" style="display:none;margin-top:8px;padding:10px;border:1px solid #ff1744;background:rgba(255,23,68,.08);">
         <div style="font-size:11px;color:#ff1744;margin-bottom:8px;">This will close the VR app entirely.</div>
         <div style="display:flex;gap:8px;">
           <button class="btn danger" style="flex:1;border-color:#ff1744;color:#ff1744;" onclick="sendCommand('quitApp');hideQuitAppConfirm()">CONFIRM</button>
@@ -422,12 +140,10 @@
         </div>
       </div>
     </div>
-
     <div class="section">
       <div class="section-label">View</div>
       <button class="btn" onclick="sendCommand('recenterView')">⊕ RECENTER VIEW</button>
     </div>
-
     <div class="section">
       <div class="section-label">EMG Sensitivity</div>
       <div class="slider-row">
@@ -442,10 +158,8 @@
     </div>
   </div>
 
-  <!-- CENTRE PANEL -->
   <div class="panel">
     <div class="panel-title">Live Telemetry</div>
-
     <div class="section">
       <div class="section-label">Playback Speed</div>
       <div class="speed-bar-wrap">
@@ -457,7 +171,6 @@
         <div class="slider-labels"><span>1×</span><span>4×</span></div>
       </div>
     </div>
-
     <div class="tele-grid">
       <div class="tele-row"><span class="tele-key">Phase</span><span class="tele-val" id="t-phase">—</span></div>
       <div class="tele-row"><span class="tele-key">EMG State</span><span class="tele-val" id="t-emgState">—</span></div>
@@ -467,48 +180,43 @@
       <div class="tele-row"><span class="tele-key">Baseline EMG</span><span class="tele-val" id="t-baseline">—</span></div>
       <div class="tele-row"><span class="tele-key">Smoothed EMG</span><span class="tele-val" id="t-smoothed">—</span></div>
       <div class="tele-row"><span class="tele-key">EMG Delta</span><span class="tele-val" id="t-delta">—</span></div>
+      <div class="tele-row"><span class="tele-key">Kinvent</span><span class="tele-val" id="t-streaming">—</span></div>
+      <div class="tele-row">
+        <span class="tele-key">IMU Cal</span>
+        <span class="tele-val">
+          <span class="cal-dots"><span class="cal-dot" id="cal0"></span><span class="cal-dot" id="cal1"></span><span class="cal-dot" id="cal2"></span></span>
+          <span id="calLabel" style="margin-left:6px;font-size:11px;">0/3</span>
+        </span>
+      </div>
+      <div class="tele-row"><span class="tele-key">RSSI</span><span class="tele-val" id="t-rssi">—</span></div>
     </div>
   </div>
 
-  <!-- RIGHT PANEL -->
   <div class="panel">
-    <div class="panel-title">Sensor Status</div>
-
+    <div class="panel-title">Current Session</div>
     <div class="section">
-      <div class="section-label">EMG Stream</div>
-      <div class="tele-row" style="border:none;padding:4px 0;">
-        <span class="tele-key">Kinvent</span>
-        <span class="tele-val" id="t-streaming">—</span>
+      <div class="tele-grid">
+        <div class="tele-row"><span class="tele-key">Status</span><span class="tele-val" id="cs-status" style="color:var(--dim);">—</span></div>
+        <div class="tele-row"><span class="tele-key">Video</span><span class="tele-val" id="cs-video">—</span></div>
+        <div class="tele-row"><span class="tele-key">Started</span><span class="tele-val" id="cs-start">—</span></div>
+        <div class="tele-row"><span class="tele-key">Duration</span><span class="tele-val" id="cs-duration">—</span></div>
+        <div class="tele-row"><span class="tele-key">Ended</span><span class="tele-val" id="cs-end">—</span></div>
+        <div class="tele-row"><span class="tele-key">Reason</span><span class="tele-val" id="cs-reason">—</span></div>
       </div>
     </div>
-
-    <div class="section">
-      <div class="section-label">IMU Calibration</div>
-      <div class="cal-dots">
-        <div class="cal-dot" id="cal0"></div>
-        <div class="cal-dot" id="cal1"></div>
-        <div class="cal-dot" id="cal2"></div>
-      </div>
-      <div style="font-size:10px;color:var(--dim);margin-top:4px;" id="calLabel">0 / 3</div>
-    </div>
-
-    <div class="section">
-      <div class="section-label">WiFi</div>
-      <div class="tele-row" style="border:none;padding:4px 0;">
-        <span class="tele-key">RSSI</span>
-        <span class="tele-val" id="t-rssi">—</span>
-      </div>
-    </div>
-
-    <div class="section" style="margin-top:auto;">
-      <div class="section-label">Last Log</div>
-      <div id="lastLog" style="font-size:11px;color:var(--dim);line-height:1.6;word-break:break-word;">—</div>
-    </div>
+    <div id="lastLog" style="font-size:11px;color:var(--dim);line-height:1.6;word-break:break-word;margin-top:8px;">—</div>
   </div>
 
-</div><!-- end layout -->
+  <div class="panel">
+    <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>Session History</span>
+      <button onclick="clearHistory()" style="background:none;border:none;color:var(--dim);font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:.1em;">CLEAR</button>
+    </div>
+    <div id="sessionHistory"><div class="no-sessions">No sessions yet</div></div>
+  </div>
 
-<!-- LOG FOOTER -->
+</div>
+
 <div class="log-header">
   <span>Event Log</span>
   <button class="log-clear" id="logClearBtn">CLEAR</button>
@@ -516,211 +224,183 @@
 <div id="logFeed"></div>
 
 <script>
-// ==============================
-// STATE
-// ==============================
-let ws = null;
-let unityConnected = false;
+let ws=null,unityConnected=false,sessionStartTime=null,sessionActive=false,durationInterval=null;
+const sessions=[];
+const relayUrlInput=document.getElementById('relayUrlInput');
+const connectBtn=document.getElementById('connectBtn');
+const relayPill=document.getElementById('relayPill');
+const unityPill=document.getElementById('unityPill');
+const unityBanner=document.getElementById('unityBanner');
+const logFeed=document.getElementById('logFeed');
+const logLines=[];
+const MAX_LOG=120;
 
-const relayUrlInput = document.getElementById('relayUrlInput');
-const connectBtn    = document.getElementById('connectBtn');
-const relayPill     = document.getElementById('relayPill');
-const unityPill     = document.getElementById('unityPill');
-const unityBanner   = document.getElementById('unityBanner');
-const logFeed       = document.getElementById('logFeed');
-const logLines      = [];
-const MAX_LOG       = 120;
+document.getElementById('logClearBtn').onclick=()=>{logFeed.innerHTML='';logLines.length=0;};
 
-document.getElementById('logClearBtn').onclick = () => {
-  logFeed.innerHTML = '';
-  logLines.length = 0;
-};
+function toggleRelay(){
+  if(ws&&ws.readyState===WebSocket.OPEN){ws.close();return;}
+  const url=relayUrlInput.value.trim();
+  if(!url){addLog('error','Enter a relay URL first');return;}
+  addLog('info','Connecting to relay...');
+  ws=new WebSocket(url);
+  ws.onopen=()=>{setRelayStatus(true);connectBtn.textContent='DISCONNECT';addLog('ok','Connected to relay server');};
+  ws.onclose=()=>{setRelayStatus(false);setUnityStatus(false);connectBtn.textContent='CONNECT';addLog('warn','Relay disconnected');};
+  ws.onerror=()=>addLog('error','WebSocket error — check URL');
+  ws.onmessage=(evt)=>{try{handleMessage(JSON.parse(evt.data));}catch(e){addLog('error','Bad message from relay');}};
+}
 
-// ==============================
-// RELAY CONNECTION
-// ==============================
-function toggleRelay() {
-  if (ws && ws.readyState === WebSocket.OPEN) {
-    ws.close();
+function handleMessage(msg){
+  if(msg.type==='status'){setUnityStatus(msg.payload.unity);return;}
+  if(msg.type==='error'){addLog('error',msg.payload.message);return;}
+  if(msg.type==='telemetry'){updateTelemetry(msg.payload);return;}
+  if(msg.type==='videoList'){populateVideoDropdown(msg.payload.videos);return;}
+  if(msg.type==='sessionEvent'){handleSessionEvent(msg.payload);return;}
+}
+
+function populateVideoDropdown(videos){
+  const sel=document.getElementById('videoSelect');
+  sel.innerHTML='<option value="0">— Select Video —</option>';
+  videos.forEach(v=>{
+    const opt=document.createElement('option');
+    opt.value=v.index;opt.textContent=v.name;sel.appendChild(opt);
+  });
+  addLog('ok','Video list updated ('+videos.length+' videos)');
+}
+
+function handleSessionEvent(payload){
+  const{reason,videoName,startTime,endTime}=payload;
+  if(reason==='started'){
+    sessionActive=true;sessionStartTime=new Date();
+    setText('cs-status','ACTIVE');
+    document.getElementById('cs-status').style.color='var(--green)';
+    document.getElementById('cs-status').className='tele-val';
+    setText('cs-video',videoName||'—');
+    setText('cs-start',startTime||'—');
+    setText('cs-duration','0s');
+    setText('cs-end','—');
+    setText('cs-reason','—');
+    clearInterval(durationInterval);
+    durationInterval=setInterval(()=>{
+      if(!sessionActive){clearInterval(durationInterval);return;}
+      const secs=Math.floor((new Date()-sessionStartTime)/1000);
+      const m=Math.floor(secs/60),s=secs%60;
+      setText('cs-duration',m>0?m+'m '+s+'s':s+'s');
+    },1000);
+    addLog('ok','Session started — '+(videoName||'—'));
     return;
   }
-
-  const url = relayUrlInput.value.trim();
-  if (!url) { addLog('error', 'Enter a relay URL first'); return; }
-
-  addLog('info', 'Connecting to relay...');
-  ws = new WebSocket(url);
-
-  ws.onopen = () => {
-    setRelayStatus(true);
-    connectBtn.textContent = 'DISCONNECT';
-    addLog('ok', 'Connected to relay server');
-  };
-
-  ws.onclose = () => {
-    setRelayStatus(false);
-    setUnityStatus(false);
-    connectBtn.textContent = 'CONNECT';
-    addLog('warn', 'Relay disconnected');
-  };
-
-  ws.onerror = () => {
-    addLog('error', 'WebSocket error — check URL');
-  };
-
-  ws.onmessage = (evt) => {
-    try {
-      const msg = JSON.parse(evt.data);
-      handleMessage(msg);
-    } catch(e) {
-      addLog('error', 'Bad message from relay');
-    }
-  };
+  sessionActive=false;clearInterval(durationInterval);
+  const labels={completed:'Completed',quit_dashboard:'Quit (dashboard)',quit_controller:'Quit (controller)',quit_app:'App closed'};
+  const reasonLabel=labels[reason]||reason;
+  const statusEl=document.getElementById('cs-status');
+  statusEl.textContent=reasonLabel;
+  statusEl.style.color='';
+  statusEl.className='tele-val reason-'+reason;
+  setText('cs-end',endTime||'—');
+  setText('cs-duration',calcDuration(startTime,endTime));
+  const reasonEl=document.getElementById('cs-reason');
+  reasonEl.textContent=reasonLabel;
+  reasonEl.className='tele-val reason-'+reason;
+  sessions.unshift({videoName,startTime,endTime,reason,reasonLabel});
+  renderHistory();
+  addLog(reason==='completed'?'ok':'warn','Session ended — '+reasonLabel);
 }
 
-// ==============================
-// INCOMING MESSAGES
-// ==============================
-function handleMessage(msg) {
-  if (msg.type === 'status') { setUnityStatus(msg.payload.unity); return; }
-  if (msg.type === 'error')  { addLog('error', msg.payload.message); return; }
-  if (msg.type === 'telemetry') { updateTelemetry(msg.payload); }
+function calcDuration(start,end){
+  if(!start||!end)return'—';
+  try{
+    const t1=parseTime(start),t2=parseTime(end);
+    const diff=Math.max(0,Math.round((t2-t1)/1000));
+    const m=Math.floor(diff/60),s=diff%60;
+    return m>0?m+'m '+s+'s':s+'s';
+  }catch{return'—';}
 }
 
-// ==============================
-// TELEMETRY
-// ==============================
-function updateTelemetry(d) {
-  const phaseEl = document.getElementById('t-phase');
-  phaseEl.textContent = d.phase || '—';
-  phaseEl.className = 'tele-val phase-' + d.phase;
-
-  const emgEl = document.getElementById('t-emgState');
-  emgEl.textContent = d.emgState || '—';
-  emgEl.className = 'tele-val emg-' + d.emgState;
-
-  setText('t-heading',  (d.heading?.toFixed(1) ?? '—') + ' °');
-  setText('t-hdgRate',  (d.headingRate?.toFixed(1) ?? '—') + ' °/s');
-  setText('t-gyroZ',    d.gyroZ?.toFixed(3) ?? '—');
-  setText('t-baseline', d.baseline?.toFixed(4) ?? '—');
-  setText('t-smoothed', d.smoothedEmg?.toFixed(4) ?? '—');
-  setText('t-delta',    d.emgDelta?.toFixed(4) ?? '—');
-
-  const speed = d.speed ?? 1;
-  document.getElementById('speedNum').textContent = speed.toFixed(2);
-  document.getElementById('speedBar').style.width = ((speed - 1) / 3 * 100) + '%';
-
-  const streamEl = document.getElementById('t-streaming');
-  streamEl.textContent = d.streaming ? 'ACTIVE' : 'OFFLINE';
-  streamEl.style.color = d.streaming ? 'var(--green)' : 'var(--red)';
-
-  const cal = d.calibration ?? 0;
-  for (let i = 0; i < 3; i++) {
-    document.getElementById('cal' + i).classList.toggle('active', i < cal);
-  }
-  document.getElementById('calLabel').textContent = cal + ' / 3';
-
-  const rssi = d.rssi ?? 0;
-  const rssiEl = document.getElementById('t-rssi');
-  rssiEl.textContent = rssi + ' dBm';
-  rssiEl.style.color = rssi > -60 ? 'var(--green)' : rssi > -75 ? 'var(--yellow)' : 'var(--red)';
-
-  if (d.log) {
-    document.getElementById('lastLog').textContent = d.log;
-    addLog('info', d.log);
-  }
+function parseTime(hms){
+  const[h,m,s]=hms.split(':').map(Number);
+  const d=new Date();d.setHours(h,m,s,0);return d;
 }
 
-// ==============================
-// COMMANDS
-// ==============================
-function sendCommand(type, payload = {}) {
-  if (!ws || ws.readyState !== WebSocket.OPEN) {
-    addLog('error', 'Not connected to relay');
-    return;
-  }
-  ws.send(JSON.stringify({ type, payload }));
-  addLog('ok', '→ ' + type);
+function renderHistory(){
+  const c=document.getElementById('sessionHistory');
+  if(sessions.length===0){c.innerHTML='<div class="no-sessions">No sessions yet</div>';return;}
+  c.innerHTML=sessions.map(s=>`
+    <div class="session-entry">
+      <div class="session-row"><span class="session-key">Video</span><span class="session-val">${escapeHtml(s.videoName||'—')}</span></div>
+      <div class="session-row"><span class="session-key">Start</span><span class="session-val">${s.startTime||'—'}</span></div>
+      <div class="session-row"><span class="session-key">End</span><span class="session-val">${s.endTime||'—'}</span></div>
+      <div class="session-row"><span class="session-key">Duration</span><span class="session-val">${calcDuration(s.startTime,s.endTime)}</span></div>
+      <div class="session-row"><span class="session-key">Reason</span><span class="session-val reason-${s.reason}">${s.reasonLabel}</span></div>
+    </div>`).join('');
 }
 
-function sendParticipantId() {
-  const id = document.getElementById('participantId').value.trim();
-  if (!id) { addLog('error', 'Participant ID is empty'); return; }
-  sendCommand('setParticipantId', { id });
+function clearHistory(){sessions.length=0;renderHistory();}
+
+function updateTelemetry(d){
+  const phaseEl=document.getElementById('t-phase');
+  phaseEl.textContent=d.phase||'—';phaseEl.className='tele-val phase-'+d.phase;
+  const emgEl=document.getElementById('t-emgState');
+  emgEl.textContent=d.emgState||'—';emgEl.className='tele-val emg-'+d.emgState;
+  setText('t-heading',(d.heading?.toFixed(1)??'—')+' °');
+  setText('t-hdgRate',(d.headingRate?.toFixed(1)??'—')+' °/s');
+  setText('t-gyroZ',d.gyroZ?.toFixed(3)??'—');
+  setText('t-baseline',d.baseline?.toFixed(4)??'—');
+  setText('t-smoothed',d.smoothedEmg?.toFixed(4)??'—');
+  setText('t-delta',d.emgDelta?.toFixed(4)??'—');
+  const speed=d.speed??1;
+  document.getElementById('speedNum').textContent=speed.toFixed(2);
+  document.getElementById('speedBar').style.width=((speed-1)/3*100)+'%';
+  const streamEl=document.getElementById('t-streaming');
+  streamEl.textContent=d.streaming?'ACTIVE':'OFFLINE';
+  streamEl.style.color=d.streaming?'var(--green)':'var(--red)';
+  const cal=d.calibration??0;
+  for(let i=0;i<3;i++)document.getElementById('cal'+i).classList.toggle('active',i<cal);
+  document.getElementById('calLabel').textContent=cal+'/3';
+  const rssi=d.rssi??0;
+  const rssiEl=document.getElementById('t-rssi');
+  rssiEl.textContent=rssi+' dBm';
+  rssiEl.style.color=rssi>-60?'var(--green)':rssi>-75?'var(--yellow)':'var(--red)';
+  if(d.log){document.getElementById('lastLog').textContent=d.log;addLog('info',d.log);}
 }
 
-function sendVideoSelect() {
-  const index = parseInt(document.getElementById('videoSelect').value);
-  sendCommand('setVideo', { index });
+function sendCommand(type,payload={}){
+  if(!ws||ws.readyState!==WebSocket.OPEN){addLog('error','Not connected to relay');return;}
+  ws.send(JSON.stringify({type,payload}));addLog('ok','→ '+type);
 }
 
-function onEmgSlider(val) {
-  document.getElementById('emgFactorDisplay').textContent = parseFloat(val).toFixed(2);
+function sendParticipantId(){
+  const id=document.getElementById('participantId').value.trim();
+  if(!id){addLog('error','Participant ID is empty');return;}
+  sendCommand('setParticipantId',{id});
 }
 
-function sendEmgFactor(val) {
-  sendCommand('setEmgFactor', { value: parseFloat(val) });
+function sendVideoSelect(){
+  const index=parseInt(document.getElementById('videoSelect').value);
+  sendCommand('setVideo',{index});
 }
 
-function confirmQuit() {
-  document.getElementById('quitConfirm').style.display = 'block';
+function onEmgSlider(val){document.getElementById('emgFactorDisplay').textContent=parseFloat(val).toFixed(2);}
+function sendEmgFactor(val){sendCommand('setEmgFactor',{value:parseFloat(val)});}
+function confirmQuit(){document.getElementById('quitConfirm').style.display='block';}
+function hideQuitConfirm(){document.getElementById('quitConfirm').style.display='none';}
+function confirmQuitApp(){document.getElementById('quitAppConfirm').style.display='block';}
+function hideQuitAppConfirm(){document.getElementById('quitAppConfirm').style.display='none';}
+function setRelayStatus(on){relayPill.classList.toggle('on',on);}
+function setUnityStatus(on){unityConnected=on;unityPill.classList.toggle('on',on);unityBanner.classList.toggle('show',!on);}
+
+function addLog(type,msg){
+  if(type==='info'&&logLines.length>0&&logLines[logLines.length-1].msg===msg)return;
+  const time=new Date().toLocaleTimeString('en-GB',{hour12:false});
+  logLines.push({type,msg});if(logLines.length>MAX_LOG)logLines.shift();
+  const cls={ok:'log-ok',error:'log-err',warn:'log-warn',info:'log-info'}[type]||'';
+  const line=document.createElement('span');line.className='log-line';
+  line.innerHTML=`<span class="log-time">${time}</span><span class="${cls}">${escapeHtml(msg)}</span>`;
+  logFeed.appendChild(line);logFeed.scrollTop=logFeed.scrollHeight;
+  while(logFeed.children.length>MAX_LOG)logFeed.removeChild(logFeed.firstChild);
 }
 
-function hideQuitConfirm() {
-  document.getElementById('quitConfirm').style.display = 'none';
-}
-
-function confirmQuitApp() {
-  document.getElementById('quitAppConfirm').style.display = 'block';
-}
-
-function hideQuitAppConfirm() {
-  document.getElementById('quitAppConfirm').style.display = 'none';
-}
-
-// ==============================
-// STATUS
-// ==============================
-function setRelayStatus(on) {
-  relayPill.classList.toggle('on', on);
-}
-
-function setUnityStatus(on) {
-  unityConnected = on;
-  unityPill.classList.toggle('on', on);
-  unityBanner.classList.toggle('show', !on);
-}
-
-// ==============================
-// LOG
-// ==============================
-function addLog(type, msg) {
-  if (type === 'info' && logLines.length > 0 && logLines[logLines.length-1].msg === msg) return;
-  const time = new Date().toLocaleTimeString('en-GB', {hour12: false});
-  logLines.push({ type, msg });
-  if (logLines.length > MAX_LOG) logLines.shift();
-  const cls = { ok:'log-ok', error:'log-err', warn:'log-warn', info:'log-info' }[type] || '';
-  const line = document.createElement('span');
-  line.className = 'log-line';
-  line.innerHTML = `<span class="log-time">${time}</span><span class="${cls}">${escapeHtml(msg)}</span>`;
-  logFeed.appendChild(line);
-  logFeed.scrollTop = logFeed.scrollHeight;
-  while (logFeed.children.length > MAX_LOG) logFeed.removeChild(logFeed.firstChild);
-}
-
-// ==============================
-// HELPERS
-// ==============================
-function setText(id, val) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = val ?? '—';
-}
-
-function escapeHtml(s) {
-  return String(s)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function setText(id,val){const el=document.getElementById(id);if(el)el.textContent=val??'—';}
+function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 </script>
 </body>
 </html>
