@@ -485,8 +485,8 @@
 <!-- RELAY CONNECT BAR -->
 <div class="relay-bar">
   <label>RELAY</label>
-  <input type="text" id="relayUrlInput" value="wss://vr-relay-server-production.up.railway.app?role=dashboard"
-  <button class="btn" id="connectBtn" style="width:auto;padding:7px 16px;" onclick="toggleRelay()">CONNECT</button>
+  <input type="text" id="relayUrlInput" value="wss://vr-relay-server-production.up.railway.app?role=dashboard" />
+  <button id="connectBtn" onclick="toggleRelay()" style="background:#00d4ff;color:#000;border:none;padding:8px 18px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:0.1em;cursor:pointer;white-space:nowrap;">CONNECT</button>
 </div>
 
 <!-- UNITY NOT CONNECTED BANNER -->
@@ -918,3 +918,4 @@ function escapeHtml(s) {
 
 </body>
 </html>
+
