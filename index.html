@@ -290,6 +290,7 @@ function handleSessionEvent(payload){
     return;
   }
   sessionActive=false;clearInterval(durationInterval);
+  document.getElementById('videoSelect').value = '0';
   const labels={completed:'Completed',quit_dashboard:'Quit (dashboard)',quit_controller:'Quit (controller)',quit_app:'App closed'};
   const reasonLabel=labels[reason]||reason;
   const statusEl=document.getElementById('cs-status');
@@ -404,4 +405,3 @@ function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;
 </script>
 </body>
 </html>
-
