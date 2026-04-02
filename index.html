@@ -172,10 +172,7 @@
       <div class="section-label">Centrifuge</div>
       <div class="tele-grid">
         <div class="tele-row"><span class="tele-key">Phase</span><span class="tele-val" id="t-phase">—</span></div>
-        <div class="tele-row"><span class="tele-key">Hdg Rate</span><span class="tele-val" id="t-hdgRate">—</span></div>
-        <div class="tele-row"><span class="tele-key">Hdg Mean</span><span class="tele-val" id="t-hdgMean">—</span></div>
-        <div class="tele-row"><span class="tele-key">Hdg RVar</span><span class="tele-val" id="t-hdgRVar">—</span></div>
-        <div class="tele-row"><span class="tele-key">GyroZ Var</span><span class="tele-val" id="t-gyroZVar">—</span></div>
+        <div class="tele-row"><span class="tele-key">GyroZ Band</span><span class="tele-val" id="t-gyroBand">—</span></div>
         <div class="tele-row">
           <span class="tele-key">Stab</span>
           <span class="tele-val" id="t-stab">—</span>
@@ -369,10 +366,7 @@ function updateTelemetry(d){
   emgEl.textContent=d.emgState||'—';emgEl.className='tele-val emg-'+d.emgState;
 
   // Centrifuge
-  setText('t-hdgRate',(d.headingRate?.toFixed(1)??'—')+' °/s');
-  setText('t-hdgMean',(d.headingMean?.toFixed(1)??'—')+' °/s');
-  setText('t-hdgRVar',d.headingRateVar?.toFixed(2)??'—');
-  setText('t-gyroZVar',d.gyroZVar?.toFixed(3)??'—');
+  setText('t-gyroBand',d.gyroBand?.toFixed(2)??'—');
 
   // Stab bar — build text bar like VR console
   const stab=d.stabProgress??0;
