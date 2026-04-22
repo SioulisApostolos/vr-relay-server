@@ -63,18 +63,11 @@
   .cal-dot.active{background:var(--green);box-shadow:0 0 4px var(--green);}
   #unityBanner{display:none;padding:8px 24px;background:rgba(255,82,82,.08);border-bottom:1px solid rgba(255,82,82,.2);font-size:11px;color:var(--red);text-align:center;}
   #unityBanner.show{display:block;}
-  .session-entry{border:1px solid var(--border2);padding:10px 12px;display:flex;flex-direction:column;gap:5px;font-size:11px;margin-bottom:8px;}
-  .session-row{display:flex;justify-content:space-between;}
-  .session-key{color:var(--dim);}.session-val{color:var(--text);text-align:right;}
+  .reason-completed{color:var(--green)!important;}.reason-quit{color:var(--yellow)!important;}.reason-quit_app{color:var(--red)!important;}
   .reason-completed{color:var(--green)!important;}
   .reason-quit_dashboard{color:var(--yellow)!important;}
   .reason-quit_controller{color:var(--yellow)!important;}
   .reason-quit_app{color:var(--red)!important;}
-  .no-sessions{color:var(--dim);font-size:11px;text-align:center;padding:20px 0;}
-  .log-header{display:flex;align-items:center;justify-content:space-between;padding:8px 20px;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-size:10px;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;}
-  .log-clear{background:none;border:none;color:var(--dim);font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;}
-  .log-clear:hover{color:var(--text);}
-  #logFeed{overflow-y:auto;padding:8px 20px;font-size:12px;line-height:1.7;max-height:100px;}
   .log-line{display:block;}.log-time{color:var(--dim);margin-right:8px;}.log-warn{color:var(--yellow);}.log-err{color:var(--red);}.log-info{color:var(--cyan);}.log-ok{color:var(--green);}
   ::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);}
   @media(max-width:1100px){.layout{grid-template-columns:1fr 1fr;height:auto;}.panel{border-right:none;border-bottom:1px solid var(--border);}}
@@ -228,23 +221,16 @@
 
   <div class="panel">
     <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
-      <span>Session History</span>
-      <button onclick="clearHistory()" style="background:none;border:none;color:var(--dim);font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:.1em;">CLEAR</button>
+      <span>Event Log</span>
+      <button id="logClearBtn" style="background:none;border:none;color:var(--dim);font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:.1em;">CLEAR</button>
     </div>
-    <div id="sessionHistory"><div class="no-sessions">No sessions yet</div></div>
+    <div id="logFeed" style="font-size:12px;line-height:1.7;overflow-y:auto;flex:1;"></div>
   </div>
 
 </div>
 
-<div class="log-header">
-  <span>Event Log</span>
-  <button class="log-clear" id="logClearBtn">CLEAR</button>
-</div>
-<div id="logFeed"></div>
-
 <script>
 let ws=null,unityConnected=false,sessionStartTime=null,sessionActive=false,durationInterval=null;
-const sessions=[];
 const relayUrlInput=document.getElementById('relayUrlInput');
 const connectBtn=document.getElementById('connectBtn');
 const relayPill=document.getElementById('relayPill');
@@ -310,7 +296,7 @@ function handleSessionEvent(payload){
   }
   sessionActive=false;clearInterval(durationInterval);
   document.getElementById('videoSelect').value = '0';
-  const labels={completed:'Completed',quit_dashboard:'Quit (dashboard)',quit_controller:'Quit (controller)',quit_app:'App closed'};
+  const labels={completed:'Completed',quit:'Quit (controller)',quit_app:'App closed'};
   const reasonLabel=labels[reason]||reason;
   const statusEl=document.getElementById('cs-status');
   statusEl.textContent=reasonLabel;
@@ -321,8 +307,6 @@ function handleSessionEvent(payload){
   const reasonEl=document.getElementById('cs-reason');
   reasonEl.textContent=reasonLabel;
   reasonEl.className='tele-val reason-'+reason;
-  sessions.unshift({videoName,startTime,endTime,reason,reasonLabel});
-  renderHistory();
   addLog(reason==='completed'?'ok':'warn','Session ended — '+reasonLabel);
 }
 
@@ -340,21 +324,6 @@ function parseTime(hms){
   const[h,m,s]=hms.split(':').map(Number);
   const d=new Date();d.setHours(h,m,s,0);return d;
 }
-
-function renderHistory(){
-  const c=document.getElementById('sessionHistory');
-  if(sessions.length===0){c.innerHTML='<div class="no-sessions">No sessions yet</div>';return;}
-  c.innerHTML=sessions.map(s=>`
-    <div class="session-entry">
-      <div class="session-row"><span class="session-key">Video</span><span class="session-val">${escapeHtml(s.videoName||'—')}</span></div>
-      <div class="session-row"><span class="session-key">Start</span><span class="session-val">${s.startTime||'—'}</span></div>
-      <div class="session-row"><span class="session-key">End</span><span class="session-val">${s.endTime||'—'}</span></div>
-      <div class="session-row"><span class="session-key">Duration</span><span class="session-val">${calcDuration(s.startTime,s.endTime)}</span></div>
-      <div class="session-row"><span class="session-key">Reason</span><span class="session-val reason-${s.reason}">${s.reasonLabel}</span></div>
-    </div>`).join('');
-}
-
-function clearHistory(){sessions.length=0;renderHistory();}
 
 function updateTelemetry(d){
   // Phase
