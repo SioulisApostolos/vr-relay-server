@@ -332,7 +332,8 @@ function updateTelemetry(d){
 
   // EMG State
   const emgEl=document.getElementById('t-emgState');
-  emgEl.textContent=d.emgState||'—';emgEl.className='tele-val emg-'+d.emgState;
+  const emgLabel=d.emgState==='SpinningDown'?'BiofeedbackStopped':(d.emgState||'—');
+  emgEl.textContent=emgLabel;emgEl.className='tele-val emg-'+d.emgState;
 
   // Centrifuge
   setText('t-gyroDelta',d.gyroDelta?.toFixed(2)??'—');
