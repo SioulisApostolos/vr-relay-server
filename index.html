@@ -165,7 +165,7 @@
       <div class="section-label">Centrifuge</div>
       <div class="tele-grid">
         <div class="tele-row"><span class="tele-key">Phase</span><span class="tele-val" id="t-phase">—</span></div>
-        <div class="tele-row"><span class="tele-key">GyroZ Band</span><span class="tele-val" id="t-gyroBand">—</span></div>
+        <div class="tele-row"><span class="tele-key">GyroZ Delta</span><span class="tele-val" id="t-gyroDelta">—</span></div>
         <div class="tele-row">
           <span class="tele-key">Stab</span>
           <span class="tele-val" id="t-stab">—</span>
@@ -335,7 +335,7 @@ function updateTelemetry(d){
   emgEl.textContent=d.emgState||'—';emgEl.className='tele-val emg-'+d.emgState;
 
   // Centrifuge
-  setText('t-gyroBand',d.gyroBand?.toFixed(2)??'—');
+  setText('t-gyroDelta',d.gyroDelta?.toFixed(2)??'—');
 
   // Stab bar — build text bar like VR console
   const stab=d.stabProgress??0;
