@@ -267,6 +267,12 @@ function handleMessage(msg){
   if(msg.type==='telemetry'){updateTelemetry(msg.payload);return;}
   if(msg.type==='videoList'){populateVideoDropdown(msg.payload.videos);return;}
   if(msg.type==='sessionEvent'){handleSessionEvent(msg.payload);return;}
+  if(msg.type==='commandResult'){handleCommandResult(msg.payload);return;}
+}
+
+function handleCommandResult(payload){
+  const{command,success,message}=payload;
+  addLog(success?'ok':'error',`${command}: ${message}`);
 }
 
 function populateVideoDropdown(videos){
