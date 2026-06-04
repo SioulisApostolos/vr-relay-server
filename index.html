@@ -364,6 +364,8 @@ function handleSessionEvent(payload){
   }
   sessionActive=false;clearInterval(durationInterval);
   document.getElementById('videoSelect').value = '0';
+  document.getElementById('participantId').value = '';
+  updateChecklist(null);
   const labels={completed:'Completed',quit:'Quit (controller)',quit_app:'App closed'};
   const reasonLabel=labels[reason]||reason;
   const statusEl=document.getElementById('cs-status');
