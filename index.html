@@ -97,6 +97,13 @@
   <div class="panel">
     <div class="panel-title">Session Setup</div>
     <div class="section">
+      <div class="section-label">ESP32 IP</div>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="espIp" placeholder="e.g. 192.168.1.9" />
+        <button class="btn" style="width:auto;padding:9px 14px;white-space:nowrap;" onclick="sendEspIp()">SET</button>
+      </div>
+    </div>
+    <div class="section">
       <div class="section-label">Participant ID</div>
       <div style="display:flex;gap:8px;">
         <input type="text" id="participantId" placeholder="e.g. P001" />
@@ -383,6 +390,11 @@ function sendCommand(type,payload={}){
   ws.send(JSON.stringify({type,payload}));addLog('ok','→ '+type);
 }
 
+function sendEspIp(){
+  const ip=document.getElementById('espIp').value.trim();
+  if(!ip){addLog('error','ESP IP is empty');return;}
+  sendCommand('setEspIp',{ip});
+}
 function sendParticipantId(){
   const id=document.getElementById('participantId').value.trim();
   if(!id){addLog('error','Participant ID is empty');return;}
