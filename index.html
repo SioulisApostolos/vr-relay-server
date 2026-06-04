@@ -26,7 +26,17 @@
   .relay-bar input{flex:1;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:12px;padding:7px 12px;outline:none;transition:border .2s;}
   .relay-bar input:focus{border-color:var(--accent);}
   .relay-bar label{font-size:11px;color:var(--dim);letter-spacing:.1em;white-space:nowrap;}
-  .layout{display:grid;grid-template-columns:300px 1fr 240px 240px;gap:0;height:calc(100vh - 170px);}
+  .layout{display:grid;grid-template-columns:300px 200px 1fr 240px 240px;gap:0;height:calc(100vh - 170px);}
+  .checklist-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);cursor:default;position:relative;}
+  .checklist-row:last-child{border-bottom:none;}
+  .checklist-icon{font-size:14px;font-weight:700;width:18px;text-align:center;flex-shrink:0;}
+  .checklist-label{font-size:11px;color:var(--text);}
+  .checklist-row.ok .checklist-icon{color:var(--green);}
+  .checklist-row.fail .checklist-icon{color:var(--red);}
+  .checklist-row.pending .checklist-icon{color:var(--dim);}
+  .checklist-tooltip{display:none;position:absolute;left:0;top:100%;z-index:100;background:#1a1f2a;border:1px solid var(--border2);padding:8px 10px;font-size:10px;color:var(--dim);width:180px;line-height:1.5;pointer-events:none;}
+  .checklist-row:hover .checklist-tooltip{display:block;}
+  .checklist-section-label{font-size:9px;color:var(--dim);letter-spacing:.15em;text-transform:uppercase;padding-top:4px;}
   .panel{border-right:1px solid var(--border);padding:20px;overflow-y:auto;display:flex;flex-direction:column;gap:18px;}
   .panel:last-child{border-right:none;}
   .panel-title{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);border-bottom:1px solid var(--border);padding-bottom:10px;}
@@ -70,7 +80,7 @@
   .reason-quit_app{color:var(--red)!important;}
   .log-line{display:block;}.log-time{color:var(--dim);margin-right:8px;}.log-warn{color:var(--yellow);}.log-err{color:var(--red);}.log-info{color:var(--cyan);}.log-ok{color:var(--green);}
   ::-webkit-scrollbar{width:4px;height:4px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border2);}
-  @media(max-width:1100px){.layout{grid-template-columns:1fr 1fr;height:auto;}.panel{border-right:none;border-bottom:1px solid var(--border);}}
+  @media(max-width:1300px){.layout{grid-template-columns:1fr 1fr;height:auto;}.panel{border-right:none;border-bottom:1px solid var(--border);}}
   @media(max-width:600px){.layout{grid-template-columns:1fr;height:auto;}}
 </style>
 </head>
@@ -150,6 +160,51 @@
         <input type="range" id="emgFactorSlider" min="0.1" max="2.0" step="0.05" value="0.5"
                oninput="onEmgSlider(this.value)" onchange="sendEmgFactor(this.value)" />
         <div class="slider-labels"><span>0.1 weak</span><span>2.0 strong</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-title">Readiness</div>
+    <div class="section">
+      <div class="checklist-section-label">Connection</div>
+      <div class="checklist-row pending" id="chk-relay">
+        <span class="checklist-icon">—</span>
+        <span class="checklist-label">Relay</span>
+        <div class="checklist-tooltip">Enter the relay URL above and press Connect</div>
+      </div>
+      <div class="checklist-row pending" id="chk-unity">
+        <span class="checklist-icon">—</span>
+        <span class="checklist-label">Unity</span>
+        <div class="checklist-tooltip">Start the VR application on the headset</div>
+      </div>
+      <div class="checklist-row pending" id="chk-esp">
+        <span class="checklist-icon">—</span>
+        <span class="checklist-label">ESP32</span>
+        <div class="checklist-tooltip">Check ESP32 power and WiFi, or set a new IP from the dashboard</div>
+      </div>
+      <div class="checklist-row pending" id="chk-emg">
+        <span class="checklist-icon">—</span>
+        <span class="checklist-label">EMG</span>
+        <div class="checklist-tooltip">Enter the 6-digit participant ID above and press Start Session</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="checklist-section-label">Session Setup</div>
+      <div class="checklist-row pending" id="chk-video">
+        <span class="checklist-icon">—</span>
+        <span class="checklist-label">Video selected</span>
+        <div class="checklist-tooltip">Select a video from the dropdown above</div>
+      </div>
+      <div class="checklist-row pending" id="chk-id-set">
+        <span class="checklist-icon">—</span>
+        <span class="checklist-label">Participant ID set</span>
+        <div class="checklist-tooltip">Enter the participant ID in the field above</div>
+      </div>
+      <div class="checklist-row pending" id="chk-id-valid">
+        <span class="checklist-icon">—</span>
+        <span class="checklist-label">Participant ID valid</span>
+        <div class="checklist-tooltip">Participant ID must be exactly 6 digits</div>
       </div>
     </div>
   </div>
@@ -389,6 +444,7 @@ function updateTelemetry(d){
   rssiEl.style.color=rssi>-60?'var(--green)':rssi>-75?'var(--yellow)':'var(--red)';
 
   if(d.log){document.getElementById('lastLog').textContent=d.log;addLog('info',d.log);}
+  updateChecklist(d);
 }
 
 function sendCommand(type,payload={}){
@@ -405,11 +461,13 @@ function sendParticipantId(){
   const id=document.getElementById('participantId').value.trim();
   if(!id){addLog('error','Participant ID is empty');return;}
   sendCommand('setParticipantId',{id});
+  updateChecklist(null);
 }
 
 function sendVideoSelect(){
   const index=parseInt(document.getElementById('videoSelect').value);
   sendCommand('setVideo',{index});
+  updateChecklist(null);
 }
 
 function onEmgSlider(val){document.getElementById('emgFactorDisplay').textContent=parseFloat(val).toFixed(2);}
@@ -418,8 +476,43 @@ function confirmQuit(){document.getElementById('quitConfirm').style.display='blo
 function hideQuitConfirm(){document.getElementById('quitConfirm').style.display='none';}
 function confirmQuitApp(){document.getElementById('quitAppConfirm').style.display='block';}
 function hideQuitAppConfirm(){document.getElementById('quitAppConfirm').style.display='none';}
-function setRelayStatus(on){relayPill.classList.toggle('on',on);}
-function setUnityStatus(on){unityConnected=on;unityPill.classList.toggle('on',on);unityBanner.classList.toggle('show',!on);}
+function setRelayStatus(on){
+  relayPill.classList.toggle('on',on);
+  setCheck('chk-relay',on);
+  if(!on){setCheck('chk-unity',false);setCheck('chk-esp',false);setCheck('chk-emg',false);}
+}
+function setUnityStatus(on){
+  unityConnected=on;
+  unityPill.classList.toggle('on',on);
+  unityBanner.classList.toggle('show',!on);
+  setCheck('chk-unity',on);
+  if(!on){setCheck('chk-esp',false);setCheck('chk-emg',false);}
+}
+function setCheck(id,state){
+  // state: true=ok, false=fail, null=pending
+  const el=document.getElementById(id);
+  if(!el)return;
+  const icon=el.querySelector('.checklist-icon');
+  el.className='checklist-row '+(state===true?'ok':state===false?'fail':'pending');
+  icon.textContent=state===true?'✓':state===false?'✗':'—';
+}
+let lastTelemetry={heading:0,gyroX:0,gyroY:0,gyroZ:0,streaming:false};
+
+function updateChecklist(d){
+  if(d)lastTelemetry=Object.assign(lastTelemetry,d);
+  const t=lastTelemetry;
+  // ESP32 — connected if we have any non-zero sensor value
+  setCheck('chk-esp', t.heading!==0||t.gyroX!==0||t.gyroY!==0||t.gyroZ!==0);
+  // EMG — streaming flag
+  setCheck('chk-emg', t.streaming===true);
+  // Video — check dropdown
+  const videoIdx=parseInt(document.getElementById('videoSelect').value||'0');
+  setCheck('chk-video', videoIdx>0);
+  // Participant ID
+  const id=document.getElementById('participantId').value.trim();
+  setCheck('chk-id-set', id.length>0);
+  setCheck('chk-id-valid', /^\d{6}$/.test(id));
+}
 
 function addLog(type,msg){
   if(type==='info'&&logLines.length>0&&logLines[logLines.length-1].msg===msg)return;
