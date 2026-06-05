@@ -186,7 +186,7 @@
       <div class="checklist-row pending" id="chk-emg">
         <span class="checklist-icon">—</span>
         <span class="checklist-label">EMG</span>
-        <div class="checklist-tooltip">Ensure the EMG sensor is connected to the Kinvent app via Bluetooth on the mobile device, and press start</div>
+        <div class="checklist-tooltip">Ensure the EMG sensor is connected to the Kinvent app via Bluetooth on the mobile device, and press Start Session</div>
       </div>
     </div>
     <div class="section">
@@ -365,6 +365,7 @@ function handleSessionEvent(payload){
   sessionActive=false;clearInterval(durationInterval);
   document.getElementById('videoSelect').value = '0';
   document.getElementById('participantId').value = '';
+  submittedParticipantId='';
   updateChecklist(null);
   const labels={completed:'Completed',quit:'Quit (controller)',quit_app:'App closed'};
   const reasonLabel=labels[reason]||reason;
@@ -462,6 +463,7 @@ function sendEspIp(){
 function sendParticipantId(){
   const id=document.getElementById('participantId').value.trim();
   if(!id){addLog('error','Participant ID is empty');return;}
+  submittedParticipantId=id;
   sendCommand('setParticipantId',{id});
   updateChecklist(null);
 }
@@ -499,6 +501,7 @@ function setCheck(id,state){
   icon.textContent=state===true?'✓':state===false?'✗':'—';
 }
 let lastTelemetry={heading:0,gyroX:0,gyroY:0,gyroZ:0,streaming:false};
+let submittedParticipantId='';
 
 function updateChecklist(d){
   if(d)lastTelemetry=Object.assign(lastTelemetry,d);
@@ -510,10 +513,9 @@ function updateChecklist(d){
   // Video — check dropdown
   const videoIdx=parseInt(document.getElementById('videoSelect').value||'0');
   setCheck('chk-video', videoIdx>0);
-  // Participant ID
-  const id=document.getElementById('participantId').value.trim();
-  setCheck('chk-id-set', id.length>0);
-  setCheck('chk-id-valid', /^\d{6}$/.test(id));
+  // Participant ID — only green when SET was actually pressed
+  setCheck('chk-id-set', submittedParticipantId.length>0);
+  setCheck('chk-id-valid', /^\d{6}$/.test(submittedParticipantId));
 }
 
 function addLog(type,msg){
