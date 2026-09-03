@@ -335,11 +335,6 @@ function handleMessage(msg){
   if(msg.type==='videoList'){populateVideoDropdown(msg.payload.videos);return;}
   if(msg.type==='sessionEvent'){handleSessionEvent(msg.payload);return;}
   if(msg.type==='commandResult'){handleCommandResult(msg.payload);return;}
-  // Relay heartbeat — reply immediately, silently (no log spam every 5s).
-  // If we stop replying, the relay terminates this socket after
-  // HEARTBEAT_TIMEOUT_MS, which fires ws.onclose and the UI already
-  // knows how to handle that (setRelayStatus(false) etc).
-  if(msg.type==='ping'){if(ws&&ws.readyState===WebSocket.OPEN){ws.send(JSON.stringify({type:'pong',payload:{}}));}return;}
 }
 function handleCommandResult(payload){
   const{command,success,message}=payload;
