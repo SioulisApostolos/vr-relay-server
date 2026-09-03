@@ -517,13 +517,18 @@ function setCheck(id,state){
   el.className='checklist-row '+(state===true?'ok':state===false?'fail':'pending');
   icon.textContent=state===true?'✓':state===false?'✗':'—';
 }
-let lastTelemetry={heading:0,gyroX:0,gyroY:0,gyroZ:0,streaming:false};
+let lastTelemetry={heading:0,gyroX:0,gyroY:0,gyroZ:0,streaming:false,espConnected:false};
 let submittedParticipantId='';
 function updateChecklist(d){
   if(d)lastTelemetry=Object.assign(lastTelemetry,d);
   const t=lastTelemetry;
-  // ESP32 — connected if we have any non-zero sensor value
-  setCheck('chk-esp', t.heading!==0||t.gyroX!==0||t.gyroY!==0||t.gyroZ!==0);
+  // ESP32 — driven by WebSocketWorker.IsEspConnected via the relay,
+  // not by sensor values. heading/gyroX/Y/Z are never reset to 0 when
+  // the ESP drops (deliberately, so a momentary drop doesn't jitter
+  // the video), so they stay non-zero long after the ESP is gone —
+  // checking "any non-zero value" was a false-positive trap. The
+  // explicit espConnected flag is the real signal.
+  setCheck('chk-esp', t.espConnected===true);
   // EMG — streaming flag
   setCheck('chk-emg', t.streaming===true);
   // Video — check dropdown
