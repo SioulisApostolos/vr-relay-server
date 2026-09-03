@@ -85,7 +85,6 @@
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo"><div class="logo-dot"></div>VR Experiment Control</div>
   <div class="header-status">
@@ -93,17 +92,13 @@
     <div class="status-pill" id="unityPill"><div class="dot"></div><span>UNITY</span></div>
   </div>
 </header>
-
 <div class="relay-bar">
   <label>RELAY</label>
   <input type="text" id="relayUrlInput" value="wss://vr-relay-server-production.up.railway.app?role=dashboard" />
   <button id="connectBtn" onclick="toggleRelay()" style="background:#00d4ff;color:#000;border:none;padding:8px 18px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.1em;cursor:pointer;white-space:nowrap;">CONNECT</button>
 </div>
-
 <div id="unityBanner">⚠ Unity VR app is not connected to relay</div>
-
 <div class="layout">
-
   <div class="panel">
     <div class="panel-title">Session Setup</div>
     <div class="section">
@@ -163,7 +158,6 @@
       </div>
     </div>
   </div>
-
   <div class="panel">
     <div class="panel-title">Readiness</div>
     <div class="section">
@@ -208,7 +202,6 @@
       </div>
     </div>
   </div>
-
   <div class="panel">
     <div class="panel-title">Live Telemetry</div>
     <div class="section">
@@ -222,7 +215,6 @@
         <div class="slider-labels"><span>1×</span><span>4×</span></div>
       </div>
     </div>
-
     <div class="section">
       <div class="section-label">Centrifuge</div>
       <div class="tele-grid">
@@ -234,7 +226,6 @@
         </div>
       </div>
     </div>
-
     <div class="section">
       <div class="section-label">EMG</div>
       <div class="tele-grid">
@@ -245,7 +236,6 @@
         <div class="tele-row"><span class="tele-key">Stream</span><span class="tele-val" id="t-streaming">—</span></div>
       </div>
     </div>
-
     <div class="section">
       <div class="section-label">ESP32</div>
       <div class="tele-grid">
@@ -265,7 +255,6 @@
       </div>
     </div>
   </div>
-
   <div class="panel">
     <div class="panel-title">Current Session</div>
     <div class="section">
@@ -280,7 +269,6 @@
     </div>
     <div id="lastLog" style="font-size:11px;color:var(--dim);line-height:1.6;word-break:break-word;margin-top:8px;">—</div>
   </div>
-
   <div class="panel">
     <div class="panel-title" style="display:flex;justify-content:space-between;align-items:center;">
       <span>Event Log</span>
@@ -288,9 +276,7 @@
     </div>
     <div id="logFeed" style="font-size:12px;line-height:1.7;overflow-y:auto;flex:1;"></div>
   </div>
-
 </div>
-
 <script>
 let ws=null,unityConnected=false,sessionStartTime=null,sessionActive=false,durationInterval=null;
 const relayUrlInput=document.getElementById('relayUrlInput');
@@ -302,8 +288,35 @@ const logFeed=document.getElementById('logFeed');
 const logLines=[];
 const MAX_LOG=120;
 
-document.getElementById('logClearBtn').onclick=()=>{logFeed.innerHTML='';logLines.length=0;};
+// ==============================
+// TELEMETRY STALENESS WATCHDOG
+// chk-esp / chk-emg only ever update when a telemetry message
+// arrives (see updateChecklist below) — if messages silently stop
+// (ESP dies but Unity/relay stay connected, a network hiccup, etc.)
+// nothing was re-evaluating them, so they'd freeze on their last
+// known value forever. This watchdog force-fails them once too
+// much time has passed since the last telemetry message, regardless
+// of what lastTelemetry last held.
+// ==============================
+let lastTelemetryAt = 0;
+let staleWarned = false;
+const TELEMETRY_STALE_MS = 3000;
+setInterval(()=>{
+  if(!lastTelemetryAt) return;
+  const stale = (Date.now() - lastTelemetryAt) > TELEMETRY_STALE_MS;
+  if(stale){
+    setCheck('chk-esp', false);
+    setCheck('chk-emg', false);
+    if(!staleWarned){
+      addLog('warn','No telemetry received for '+(TELEMETRY_STALE_MS/1000)+'s — ESP/EMG status may be stale');
+      staleWarned=true;
+    }
+  } else {
+    staleWarned=false;
+  }
+},1000);
 
+document.getElementById('logClearBtn').onclick=()=>{logFeed.innerHTML='';logLines.length=0;};
 function toggleRelay(){
   if(ws&&ws.readyState===WebSocket.OPEN){ws.close();return;}
   const url=relayUrlInput.value.trim();
@@ -315,7 +328,6 @@ function toggleRelay(){
   ws.onerror=()=>addLog('error','WebSocket error — check URL');
   ws.onmessage=(evt)=>{try{handleMessage(JSON.parse(evt.data));}catch(e){addLog('error','Bad message from relay');}};
 }
-
 function handleMessage(msg){
   if(msg.type==='status'){setUnityStatus(msg.payload.unity);return;}
   if(msg.type==='error'){addLog('error',msg.payload.message);return;}
@@ -323,13 +335,16 @@ function handleMessage(msg){
   if(msg.type==='videoList'){populateVideoDropdown(msg.payload.videos);return;}
   if(msg.type==='sessionEvent'){handleSessionEvent(msg.payload);return;}
   if(msg.type==='commandResult'){handleCommandResult(msg.payload);return;}
+  // Relay heartbeat — reply immediately, silently (no log spam every 5s).
+  // If we stop replying, the relay terminates this socket after
+  // HEARTBEAT_TIMEOUT_MS, which fires ws.onclose and the UI already
+  // knows how to handle that (setRelayStatus(false) etc).
+  if(msg.type==='ping'){if(ws&&ws.readyState===WebSocket.OPEN){ws.send(JSON.stringify({type:'pong',payload:{}}));}return;}
 }
-
 function handleCommandResult(payload){
   const{command,success,message}=payload;
   addLog(success?'ok':'error',`${command}: ${message}`);
 }
-
 function populateVideoDropdown(videos){
   const sel=document.getElementById('videoSelect');
   sel.innerHTML='<option value="0">— Select Video —</option>';
@@ -339,7 +354,6 @@ function populateVideoDropdown(videos){
   });
   addLog('ok','Video list updated ('+videos.length+' videos)');
 }
-
 function setSessionControls(disabled){
   const ids=['espIp','participantId','videoSelect','emgFactorSlider'];
   ids.forEach(id=>{
@@ -361,7 +375,6 @@ function setSessionControls(disabled){
   document.querySelectorAll('.btn[onclick="sendEspIp()"], .btn[onclick="sendParticipantId()"]')
     .forEach(el=>el.style.opacity=opacity);
 }
-
 function handleSessionEvent(payload){
   const{reason,videoName,startTime,endTime}=payload;
   if(reason==='started'){
@@ -404,7 +417,6 @@ function handleSessionEvent(payload){
   reasonEl.className='tele-val reason-'+reason;
   addLog(reason==='completed'?'ok':'warn','Session ended — '+reasonLabel);
 }
-
 function calcDuration(start,end){
   if(!start||!end)return'—';
   try{
@@ -414,31 +426,26 @@ function calcDuration(start,end){
     return m>0?m+'m '+s+'s':s+'s';
   }catch{return'—';}
 }
-
 function parseTime(hms){
   const[h,m,s]=hms.split(':').map(Number);
   const d=new Date();d.setHours(h,m,s,0);return d;
 }
-
 function updateTelemetry(d){
+  lastTelemetryAt = Date.now();
   // Phase
   const phaseEl=document.getElementById('t-phase');
   phaseEl.textContent=d.phase||'—';phaseEl.className='tele-val phase-'+d.phase;
-
   // EMG State
   const emgEl=document.getElementById('t-emgState');
   const streaming=d.streaming;
   const emgLabel=!streaming?'Idle':d.emgState==='SpinningDown'?'BiofeedbackStopped':(d.emgState||'—');
   emgEl.textContent=emgLabel;emgEl.className='tele-val '+(streaming?'emg-'+d.emgState:'emg-Idle');
-
   // Centrifuge
   setText('t-gyroDelta',d.gyroDelta?.toFixed(2)??'—');
-
   // Stab bar — build text bar like VR console
   const stab=d.stabProgress??0;
   const filled=Math.round(stab*10);
   setText('t-stab','['+('|'.repeat(filled))+('-'.repeat(10-filled))+']');
-
   // EMG
   setText('t-baseline',d.baseline?.toFixed(4)??'—');
   setText('t-smoothed',d.smoothedEmg?.toFixed(4)??'—');
@@ -446,39 +453,32 @@ function updateTelemetry(d){
   const streamEl=document.getElementById('t-streaming');
   streamEl.textContent=d.streaming?'ACTIVE':'OFFLINE';
   streamEl.style.color=d.streaming?'var(--green)':'var(--red)';
-
   // Speed bar
   const speed=d.speed??1;
   document.getElementById('speedNum').textContent=speed.toFixed(2);
   document.getElementById('speedBar').style.width=((speed-1)/3*100)+'%';
-
   // ESP32
   setText('t-heading',(d.heading?.toFixed(2)??'—')+' °');
   setText('t-gyroX',d.gyroX?.toFixed(2)??'—');
   setText('t-gyroY',d.gyroY?.toFixed(2)??'—');
   setText('t-gyroZ',d.gyroZ?.toFixed(3)??'—');
   setText('t-raw',d.rawMessage||'—');
-
   // Calibration dots
   const cal=d.calibration??0;
   for(let i=0;i<3;i++)document.getElementById('cal'+i).classList.toggle('active',i<cal);
   document.getElementById('calLabel').textContent=cal+'/3';
-
   // RSSI
   const rssi=d.rssi??0;
   const rssiEl=document.getElementById('t-rssi');
   rssiEl.textContent=rssi+' dBm';
   rssiEl.style.color=rssi>-60?'var(--green)':rssi>-75?'var(--yellow)':'var(--red)';
-
   if(d.log){document.getElementById('lastLog').textContent=d.log;addLog('info',d.log);}
   updateChecklist(d);
 }
-
 function sendCommand(type,payload={}){
   if(!ws||ws.readyState!==WebSocket.OPEN){addLog('error','Not connected to relay');return;}
   ws.send(JSON.stringify({type,payload}));addLog('ok','→ '+type);
 }
-
 function sendEspIp(){
   const ip=document.getElementById('espIp').value.trim();
   if(!ip){addLog('error','ESP IP is empty');return;}
@@ -491,13 +491,11 @@ function sendParticipantId(){
   sendCommand('setParticipantId',{id});
   updateChecklist(null);
 }
-
 function sendVideoSelect(){
   const index=parseInt(document.getElementById('videoSelect').value);
   sendCommand('setVideo',{index});
   updateChecklist(null);
 }
-
 function onEmgSlider(val){document.getElementById('emgFactorDisplay').textContent=parseFloat(val).toFixed(2);}
 function sendEmgFactor(val){sendCommand('setEmgFactor',{value:parseFloat(val)});}
 function confirmQuit(){document.getElementById('quitConfirm').style.display='block';}
@@ -526,7 +524,6 @@ function setCheck(id,state){
 }
 let lastTelemetry={heading:0,gyroX:0,gyroY:0,gyroZ:0,streaming:false};
 let submittedParticipantId='';
-
 function updateChecklist(d){
   if(d)lastTelemetry=Object.assign(lastTelemetry,d);
   const t=lastTelemetry;
@@ -541,7 +538,6 @@ function updateChecklist(d){
   setCheck('chk-id-set', submittedParticipantId.length>0);
   setCheck('chk-id-valid', /^\d{6}$/.test(submittedParticipantId));
 }
-
 function addLog(type,msg){
   if(type==='info'&&logLines.length>0&&logLines[logLines.length-1].msg===msg)return;
   const time=new Date().toLocaleTimeString('en-GB',{hour12:false});
@@ -552,7 +548,6 @@ function addLog(type,msg){
   logFeed.appendChild(line);logFeed.scrollTop=logFeed.scrollHeight;
   while(logFeed.children.length>MAX_LOG)logFeed.removeChild(logFeed.firstChild);
 }
-
 function setText(id,val){const el=document.getElementById(id);if(el)el.textContent=val??'—';}
 function escapeHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 </script>
